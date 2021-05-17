@@ -29,6 +29,7 @@ class Embed():
     dictionary['color']       = self.color
     dictionary['description'] = self.description
 
+    self._addValueIfExists(dictionary, 'author',    'name', self.author)
     self._addValueIfExists(dictionary, 'image',     'url',  self.imageURL)
     self._addValueIfExists(dictionary, 'thumbnail', 'url',  self.thumbnailURL)
     self._addValueIfExists(dictionary, 'footer',    'text', self.footerText)
@@ -39,7 +40,7 @@ class Embed():
     return dictionary
 
 
-  def _addValueIfExists(dictionary, key, internal_key, value):
+  def _addValueIfExists(self, dictionary, key, internal_key, value):
     if value:
       dictionary[key] = {
         internal_key: value
