@@ -6,7 +6,7 @@ class WebhookMessage():
   content = None
   embeds = []
   
-  def __init__(self, webhookURL, username, avatarURL, content, embeds):
+  def __init__(self, webhookURL, username, avatarURL, embeds, content = ""):
     self.webhookURL = webhookURL
     self.username   = username
     self.avatarURL  = avatarURL
