@@ -35,6 +35,8 @@ class Embed():
 
     if len(self.fields):
       dictionary['fields'] = self.fields
+    
+    return dictionary
 
 
   def _addValueIfExists(dictionary, key, internal_key, value):

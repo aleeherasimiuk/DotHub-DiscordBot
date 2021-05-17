@@ -22,3 +22,5 @@ class WebhookMessage():
       dictionary['content'] = self.content
     if len(self.embeds):
       dictionary['embeds']  = self.embeds
+
+    return dictionary
