@@ -17,10 +17,10 @@ class WebhookMessage():
   def as_dict(self):
     dictionary = {}
     dictionary['username']  = self.username
-    dictionary['avatarURL'] = self.avatarURL
+    dictionary['avatar_url'] = self.avatarURL
     if self.content:
       dictionary['content'] = self.content
     if len(self.embeds):
-      dictionary['embeds']  = self.embeds
+      dictionary['embeds']  = [embed.as_dict() for embed in self.embeds]
 
     return dictionary
