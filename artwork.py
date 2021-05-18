@@ -9,4 +9,4 @@ class Artwork(Embed):
       [Ver mensaje original]({})".format(made_with, colabURL, original_message)
     
     
-    super.__init__(title, description, imageURL, author, None, 5570309, None, None)
+    super().__init__(title, description, imageURL, author, 5570309, None, None)
