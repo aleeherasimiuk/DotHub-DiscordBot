@@ -1,6 +1,5 @@
-from artwork import Artwork
 import unittest
-
+from src.main.artwork import Artwork
 
 class TestArtwork(unittest.TestCase):
   artwork = Artwork("titulo", "https://google.com", "un_algoritmo", "https://google.com.cl", "https://google.es", "un autor")
@@ -10,9 +9,7 @@ class TestArtwork(unittest.TestCase):
   
   def test_desc(self):
 
-    expected = "Hecho con **un_algoritmo**\n\
-      Pruebalo tú en: [Google Colab](https://google.com.cl)\n\n\
-      [Ver mensaje original](https://google.com)"
+    expected = "Hecho con **un_algoritmo**\nPruebalo tú en: [Google Colab](https://google.com.cl)\n\n[Ver mensaje original](https://google.com)"
 
     self.assertEqual(self.artwork.description, expected)
 
@@ -37,9 +34,7 @@ class TestArtwork(unittest.TestCase):
     expected = {
       'title': 'titulo',
       'color': 5570309,
-      'description': "Hecho con **un_algoritmo**\n\
-      Pruebalo tú en: [Google Colab](https://google.com.cl)\n\n\
-      [Ver mensaje original](https://google.com)",  
+      'description': "Hecho con **un_algoritmo**\nPruebalo tú en: [Google Colab](https://google.com.cl)\n\n[Ver mensaje original](https://google.com)",  
       'author': {
         'name': 'un autor'
       },

@@ -1,5 +1,5 @@
 import unittest
-from embed import Embed
+from src.main.embed import Embed
 
 class TestEmbed(unittest.TestCase):
   embed = Embed("titulo", "una descripcion", "https://google.com.ar", "un autor", 123456, "https://google.com", "un footer")

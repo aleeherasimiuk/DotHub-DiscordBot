@@ -1,15 +1,16 @@
+from src.main.config import Config
 class WebhookMessage():
 
-  webhookURL = None
+  webhook_url = None
   username = None
-  avatarURL = None
+  avatar_url = None
   content = None
   embeds = []
   
-  def __init__(self, webhookURL, username, avatarURL, embeds, content = ""):
-    self.webhookURL = webhookURL
-    self.username   = username
-    self.avatarURL  = avatarURL
+  def __init__(self, config: Config,  embeds, content = ""):
+    self.webhook_url = config.webhook_url
+    self.username   = config.username
+    self.avatar_url  = config.avatar_url
     self.content    = content
     self.embeds     = embeds
 
@@ -17,7 +18,7 @@ class WebhookMessage():
   def as_dict(self):
     dictionary = {}
     dictionary['username']  = self.username
-    dictionary['avatar_url'] = self.avatarURL
+    dictionary['avatar_url'] = self.avatar_url
     if self.content:
       dictionary['content'] = self.content
     if len(self.embeds):

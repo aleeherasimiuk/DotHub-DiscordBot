@@ -22,7 +22,7 @@ def send(data, title):
 
 for artwork in museum:
   art = Artwork(artwork['title'], artwork['original_url'], 'VQGAN + Clip', config.colab_url, artwork['image_url'], artwork['author'])
-  message = WebhookMessage(config.webhook_url, config.username, config.avatar_url, embeds=[art], content= "")
+  message = WebhookMessage(config, embeds=[art], content= "")
   send(message.as_dict(), artwork['title'])
   time.sleep(10)
 

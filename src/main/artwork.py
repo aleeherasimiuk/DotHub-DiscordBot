@@ -1,5 +1,4 @@
-from embed import Embed
-
+from src.main.embed import Embed
 
 class Artwork(Embed):
   
