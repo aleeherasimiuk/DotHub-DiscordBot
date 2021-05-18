@@ -19,7 +19,7 @@ class TestArtwork(unittest.TestCase):
   def test_image_url(self):
     self.assertEqual(self.artwork.imageURL, "https://google.es")
 
-  def test_image_url(self):
+  def test_author(self):
     self.assertEqual(self.artwork.author, "un autor")
 
   def test_color(self):
