@@ -1,13 +1,13 @@
 import requests
-from config import Config
-from artwork import Artwork
-from webhook_message import WebhookMessage
+from src.main.config import Config
+from src.main.artwork import Artwork
+from src.main.webhook_message import WebhookMessage
 import json
 import time
 
-config = Config("config.json")
+config = Config("../res/config.json")
 
-file = open('museo.json')
+file = open('../res/museo.json')
 museum = json.load(file)['data']
 
 def send(data, title):
