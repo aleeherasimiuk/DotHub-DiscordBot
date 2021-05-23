@@ -23,7 +23,7 @@ class TestArtwork(unittest.TestCase):
     self.assertEqual(self.artwork.color, 5570309)
   
   def test_thumbnail_url(self):
-    self.assertEqual(self.artwork.thumbnailURL, None)
+    self.assertEqual(self.artwork.thumbnail_url, None)
 
   def test_footer(self):
     self.assertEqual(self.artwork.footerText, None)

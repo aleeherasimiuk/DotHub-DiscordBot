@@ -8,13 +8,13 @@ class Embed():
   footerText  = None
   author      = None
   
-  def __init__(self, title, description, imageURL, author, color, thumbnailURL, footerText):
+  def __init__(self, title, description, imageURL, author, color, thumbnail_url, footerText):
     self.title = title
     self.description = description
     self.imageURL = imageURL
     self.author = author
     self.color = color
-    self.thumbnailURL = thumbnailURL
+    self.thumbnail_url = thumbnail_url
     self.footerText = footerText
 
   def add_field(self, name: str, value: str):
@@ -31,7 +31,7 @@ class Embed():
 
     self._addValueIfExists(dictionary, 'author',    'name', self.author)
     self._addValueIfExists(dictionary, 'image',     'url',  self.imageURL)
-    self._addValueIfExists(dictionary, 'thumbnail', 'url',  self.thumbnailURL)
+    self._addValueIfExists(dictionary, 'thumbnail', 'url',  self.thumbnail_url)
     self._addValueIfExists(dictionary, 'footer',    'text', self.footerText)
 
     if len(self.fields):

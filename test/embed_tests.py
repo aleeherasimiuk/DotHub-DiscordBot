@@ -20,7 +20,7 @@ class TestEmbed(unittest.TestCase):
     self.assertEqual(self.embed.color, 123456)
   
   def test_thumbnail_url(self):
-    self.assertEqual(self.embed.thumbnailURL, "https://google.com")
+    self.assertEqual(self.embed.thumbnail_url, "https://google.com")
 
   def test_footer(self):
     self.assertEqual(self.embed.footerText, "un footer")

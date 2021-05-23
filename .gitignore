@@ -5,3 +5,4 @@ __pycache__/
 *.json
 !src/res/template_config.json
 !src/res/template_museum.json
+*.code-workspace
