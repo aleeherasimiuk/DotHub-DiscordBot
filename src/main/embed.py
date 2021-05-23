@@ -1,12 +1,13 @@
 class Embed():
 
-  title       = None
-  description = None
-  fields      = []
-  imageURL    = None
-  color       = None
-  footerText  = None
-  author      = None
+  title         = None
+  description   = None
+  fields        = []
+  imageURL      = None
+  color         = None
+  footerText    = None
+  author        = None
+  thumbnail_url = None
   
   def __init__(self, title, description, imageURL, author, color, thumbnail_url, footerText):
     self.title = title

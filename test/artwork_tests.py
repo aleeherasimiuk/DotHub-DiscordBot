@@ -1,3 +1,4 @@
+from src.main.config import Config
 import unittest
 from src.main.artwork import Artwork
 
@@ -44,6 +45,28 @@ class TestArtwork(unittest.TestCase):
     }
 
     self.assertTrue(dictionary, expected)
-  
+
+  def test_from_json(self):
+    another_artwork = Artwork.from_json({
+        'author': 'un autor',
+        'title': 'titulo',
+        'image_url': 'https://google.com',
+        'original_url': 'https://google.com.ar'
+    }, "https://google.es", "un algoritmo")
+
+    expected = {
+        'title': 'titulo',
+        'color': 5570309,
+        'description': "Hecho con **un_algoritmo**\nPruebalo tú en: [Google Colab](https://google.es)\n\n[Ver mensaje original](https://google.com.ar)",
+        'author': {
+            'name': 'un autor'
+        },
+        'image': {
+            'url': "https://google.com"
+        },
+    }
+
+    self.assertTrue(another_artwork.as_dict(), expected)
+
 if __name__ == '__main__':
     unittest.main()
