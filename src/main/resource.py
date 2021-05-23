@@ -1,5 +1,5 @@
 from typing import Dict
-from src.main.embed import Embed
+from embed import Embed
 
 class Resource(Embed):
   

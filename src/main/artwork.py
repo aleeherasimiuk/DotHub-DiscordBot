@@ -1,6 +1,6 @@
-from src.main.config import Config
+from config import Config
 from typing import Dict
-from src.main.embed import Embed
+from embed import Embed
 
 class Artwork(Embed):
 

@@ -1,5 +1,5 @@
 import requests
-from src.main.config import Config
+from config import Config
 class WebhookMessage():
 
   webhook_url = None
