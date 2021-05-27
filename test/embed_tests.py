@@ -1,52 +1,42 @@
+from main.embed.embed import Embed
 import unittest
-from src.main.embed import Embed
+import json
 
 class TestEmbed(unittest.TestCase):
-  embed = Embed("titulo", "una descripcion", "https://google.com.ar", "un autor", 123456, "https://google.com", "un footer")
+
+  embed: Embed
+
+  def setUp(self):
+    self.embed = Embed(**self._mock_webhook_message())
+
+  def _mock_webhook_message(self):
+    file = open("res/mock_webhook_message.json")
+    return json.load(file)
 
   def test_titulo(self):
-    self.assertEqual(self.embed.title, "titulo")
+    self.assertEqual(self.embed.title, "embed_title")
   
   def test_desc(self):
-    self.assertEqual(self.embed.description, "una descripcion")
+    self.assertEqual(self.embed.description, "embed_description")
 
   def test_image_url(self):
-    self.assertEqual(self.embed.imageURL, "https://google.com.ar")
+    self.assertEqual(self.embed.image_url.url, "https://cdn.discordapp.com/attachments/842102491859386409/843277210449608724/crystal_library.png")
 
   def test_image_url(self):
-    self.assertEqual(self.embed.author, "un autor")
+    self.assertEqual(self.embed.author.name, "@an_author")
 
   def test_color(self):
-    self.assertEqual(self.embed.color, 123456)
+    self.assertEqual(self.embed.color, 5570309)
   
   def test_thumbnail_url(self):
-    self.assertEqual(self.embed.thumbnail_url, "https://google.com")
+    self.assertEqual(self.embed.thumbnail_url.url, "")
 
   def test_footer(self):
-    self.assertEqual(self.embed.footerText, "un footer")
+    self.assertEqual(self.embed.footer.text, "embed_footer")
 
-  def test_json(self):
-    dictionary = self.embed.as_dict()
-
-    expected = {
-      'title': 'titulo',
-      'color': 123456,
-      'description': 'una descripcion',  
-      'author': {
-        'name': 'un autor'
-      },
-      'image': {
-        'url': "https://google.com.ar"
-      },
-      'thumbnail':{
-        'url': "https://google.com"
-      },
-      'footer': {
-        'text': "un footer"
-      }
-    }
-
-    self.assertTrue(dictionary, expected)
+  def test_fields(self):
+    self.assertEqual(self.embed.fields[0].name, "field1")
+    self.assertEqual(self.embed.fields[0].value, "value1")
   
 if __name__ == '__main__':
     unittest.main()

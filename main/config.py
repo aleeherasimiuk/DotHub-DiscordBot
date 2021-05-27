@@ -41,5 +41,5 @@ class Config():
 
 
   def _validate_webhook_url(self, webhook_url):
-    if not webhook_url.startswith("https://discord.com/api/webhooks/"):
+    if not webhook_url.startswith("https://discord.com/api/webhooks"):
       raise Exception("The webhook_url is not valid.")
