@@ -1,6 +1,6 @@
 from typing import List
 from .author import Author
-from .image import Image
+from .image import Image, Thumbnail
 from .footer import Footer
 from .field import Field
 class Embed():
@@ -11,53 +11,71 @@ class Embed():
   timestamp     = ""
   url           = ""
 
-  image_url     : Image
-  footer        : Footer
-  author        : Author
-  thumbnail_url : Image
-  fields        : List[Field]
+  image     : Image
+  footer    : Footer
+  author    : Author
+  thumbnail : Thumbnail
+  fields    : List[Field]
   
-  def __init__(self, title, url, description, image, author, color, thumbnail, footer, timestamp, fields):
-    self.title         = title
-    self.description   = description
-    self.url           = url
-    self.color         = color
-    self.timestamp     = timestamp
-    self.image_url     = Image(**image)
-    self.author        = Author(**author)
-    self.footer        = Footer(**footer)
-    self.thumbnail_url = Image(**thumbnail)
-    self.fields        = [Field(**field) for field in fields]
 
+  def __init__(self, title, url, description, image, author, color, thumbnail, footer, timestamp = "", fields = []):
+    self.title       = title
+    self.description = description
+    self.url         = url
+    self.color       = color
+    self.timestamp   = timestamp
+    self.image       = image
+    self.author      = author
+    self.footer      = footer
+    self.thumbnail   = thumbnail
+    self.fields      = fields
+
+
+  @classmethod
+  def from_dict(self, title, url, description, image, author, color, thumbnail, footer, timestamp, fields):
+    image       = self._build_if_exist(Image , image)
+    author      = self._build_if_exist(Author, author)
+    footer      = self._build_if_exist(Footer, footer)
+    thumbnail   = self._build_if_exist(Thumbnail, thumbnail)
+    fields      = [Field(**field) for field in fields if field]
+
+    return Embed(title, url, description, image, author, color, thumbnail, footer, timestamp, fields)
+
+  @classmethod
+  def _build_if_exist(self, function, value):
+    return function(**value) if value else {}
 
   def add_field(self, name: str, value: str):
-    self.fields.append({
+    self.fields.append(Field(**{
       'name': name,
       'value': value
-    })
+    }))
 
-  def as_dict(self):
+  def to_dict(self):
     dictionary = {}
     dictionary['title']       = self.title
+    dictionary['url']         = self.url
     dictionary['color']       = self.color
     dictionary['description'] = self.description
+    dictionary['timestamp']   = self.timestamp
 
-    self._addValueIfExists(dictionary, 'author',    'name', self.author)
-    self._addValueIfExists(dictionary, 'image',     'url',  self.image_url)
-    self._addValueIfExists(dictionary, 'thumbnail', 'url',  self.thumbnail_url)
-    self._addValueIfExists(dictionary, 'footer',    'text', self.footerText)
+    other_values = [self.author, self.image, self.thumbnail, self.footer]
 
-    if len(self.fields):
-      dictionary['fields'] = self.fields
+    for value in other_values:
+      self._addValueIfExists(dictionary, value) 
+
+    if self.fields:
+      dictionary['fields'] = []
+      for field in self.fields:
+        dictionary['fields'].append(field.to_dict())
     
     return dictionary
 
 
-  def _addValueIfExists(self, dictionary, key, internal_key, value):
+  def _addValueIfExists(self, dictionary, value):
     if value:
-      dictionary[key] = {
-        internal_key: value
-      }
+      dictionary[value.key()] = value.to_dict()
+
   
 
 

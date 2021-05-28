@@ -1,15 +1,16 @@
-from typing import Dict
-from embed import Embed
+from main.embed.author import Author
+from main.embed.image import Image
+from .embed.embed import Embed
 
 class Artwork(Embed):
   
   def __init__(self, title, original_message, image_url, author):
     description = "Hecho con **VQGAN + CLIP**\n\n[Ver mensaje original]({})".format(original_message)
     
-    super().__init__(title, description, image_url, author, 5570309, None, None)
+    super().__init__(title, "", description, Image(image_url), Author(author), '5570309', None, None)
 
   @classmethod
-  def from_json(self, json):
+  def from_dict(self, json):
     try:
       return Artwork(**json)
     except TypeError as err:

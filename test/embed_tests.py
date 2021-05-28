@@ -7,7 +7,7 @@ class TestEmbed(unittest.TestCase):
   embed: Embed
 
   def setUp(self):
-    self.embed = Embed(**self._mock_webhook_message())
+    self.embed = Embed.from_dict(**self._mock_webhook_message())
 
   def _mock_webhook_message(self):
     file = open("res/mock_webhook_message.json")
@@ -27,9 +27,6 @@ class TestEmbed(unittest.TestCase):
 
   def test_color(self):
     self.assertEqual(self.embed.color, 5570309)
-  
-  def test_thumbnail_url(self):
-    self.assertEqual(self.embed.thumbnail_url.url, "")
 
   def test_footer(self):
     self.assertEqual(self.embed.footer.text, "embed_footer")
@@ -38,5 +35,41 @@ class TestEmbed(unittest.TestCase):
     self.assertEqual(self.embed.fields[0].name, "field1")
     self.assertEqual(self.embed.fields[0].value, "value1")
   
+
+  def test_dict(self):
+    self.maxDiff = 10000
+    expected = {
+        "title": "embed_title",
+        "color": 5570309,
+        "description": "embed_description",
+        "timestamp": "",
+        "url": "embed_url",
+        "author": {
+            "name": "@an_author",
+            "url": "",
+            "icon_url": ""
+
+        },
+        "image": {
+            "url": "https://cdn.discordapp.com/attachments/842102491859386409/843277210449608724/crystal_library.png"
+        },
+        "footer": {
+            "text": "embed_footer",
+            "icon_url": ""
+        },
+        "fields": [
+            {
+                "name": "field1",
+                "value": "value1",
+                "inline": False
+            }
+        ],
+        "timestamp": "",
+    }
+
+    self.assertDictEqual(self.embed.to_dict(), expected)
+
+
+
 if __name__ == '__main__':
     unittest.main()

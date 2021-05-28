@@ -1,72 +1,43 @@
-from src.main.config import Config
+from main.config import Config
 import unittest
-from src.main.artwork import Artwork
+from main.artwork import Artwork
 
 class TestArtwork(unittest.TestCase):
-  artwork = Artwork("titulo", "https://google.com", "un_algoritmo", "https://google.com.cl", "https://google.es", "un autor")
+  artwork : Artwork
+  artwork_json = {
+    'title': 'titulo',
+    'author': 'un autor',
+    'image_url': 'https://google.com/image.jpg',
+    'original_message': 'https://discord.com/channels/0/0/0'
+  }
+
+  def setUp(self):
+    self.artwork = Artwork.from_dict(self.artwork_json)
 
   def test_titulo(self):
     self.assertEqual(self.artwork.title, "titulo")
   
   def test_desc(self):
 
-    expected = "Hecho con **un_algoritmo**\nPruebalo tú en: [Google Colab](https://google.com.cl)\n\n[Ver mensaje original](https://google.com)"
+    expected = "Hecho con **VQGAN + CLIP**\n\n[Ver mensaje original](https://discord.com/channels/0/0/0)"
 
     self.assertEqual(self.artwork.description, expected)
 
   def test_image_url(self):
-    self.assertEqual(self.artwork.imageURL, "https://google.es")
+    self.assertEqual(self.artwork.image.url, "https://google.com/image.jpg")
 
   def test_author(self):
-    self.assertEqual(self.artwork.author, "un autor")
+    self.assertEqual(self.artwork.author.name, "@un autor")
 
   def test_color(self):
-    self.assertEqual(self.artwork.color, 5570309)
+    self.assertEqual(self.artwork.color, '5570309')
   
   def test_thumbnail_url(self):
-    self.assertEqual(self.artwork.thumbnail_url, None)
+    self.assertEqual(self.artwork.thumbnail, None)
 
   def test_footer(self):
-    self.assertEqual(self.artwork.footerText, None)
+    self.assertEqual(self.artwork.footer, None)
 
-  def test_json(self):
-    dictionary = self.artwork.as_dict()
-
-    expected = {
-      'title': 'titulo',
-      'color': 5570309,
-      'description': "Hecho con **un_algoritmo**\nPruebalo tú en: [Google Colab](https://google.com.cl)\n\n[Ver mensaje original](https://google.com)",  
-      'author': {
-        'name': 'un autor'
-      },
-      'image': {
-        'url': "https://google.es"
-      },
-    }
-
-    self.assertTrue(dictionary, expected)
-
-  def test_from_json(self):
-    another_artwork = Artwork.from_json({
-        'author': 'un autor',
-        'title': 'titulo',
-        'image_url': 'https://google.com',
-        'original_url': 'https://google.com.ar'
-    }, "https://google.es", "un algoritmo")
-
-    expected = {
-        'title': 'titulo',
-        'color': 5570309,
-        'description': "Hecho con **un_algoritmo**\nPruebalo tú en: [Google Colab](https://google.es)\n\n[Ver mensaje original](https://google.com.ar)",
-        'author': {
-            'name': 'un autor'
-        },
-        'image': {
-            'url': "https://google.com"
-        },
-    }
-
-    self.assertTrue(another_artwork.as_dict(), expected)
-
+  
 if __name__ == '__main__':
     unittest.main()
