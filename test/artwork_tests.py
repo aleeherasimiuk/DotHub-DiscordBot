@@ -19,7 +19,7 @@ class TestArtwork(unittest.TestCase):
   
   def test_desc(self):
 
-    expected = "Hecho con **VQGAN + CLIP**\n\n[Ver mensaje original](https://discord.com/channels/0/0/0)"
+    expected = "Hecho con **VQGAN + CLIP**\n[Ver mensaje original](https://discord.com/channels/0/0/0)"
 
     self.assertEqual(self.artwork.description, expected)
 

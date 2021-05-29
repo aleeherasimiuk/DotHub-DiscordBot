@@ -51,7 +51,7 @@ class TestWebhookMessage(unittest.TestCase):
           'title': 'title',
           'color': '5570309',
           'url': "",
-          'description': "Hecho con **VQGAN + CLIP**\n\n[Ver mensaje original](https://google.es)",
+          'description': "Hecho con **VQGAN + CLIP**\n[Ver mensaje original](https://google.es)",
           'author': {
             'name': '@un autor',
             'url': "",
@@ -66,7 +66,7 @@ class TestWebhookMessage(unittest.TestCase):
           'title': 'title',
           'color': '5570309',
           'url': "",
-          'description': "Hecho con **VQGAN + CLIP**\n\n[Ver mensaje original](https://google.es)",
+          'description': "Hecho con **VQGAN + CLIP**\n[Ver mensaje original](https://google.es)",
           'author': {
             'name': '@un autor',
             'url': "",

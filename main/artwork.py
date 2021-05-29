@@ -1,3 +1,4 @@
+from main.embed.footer import Footer
 from main.embed.author import Author
 from main.embed.image import Image
 from .embed.embed import Embed
