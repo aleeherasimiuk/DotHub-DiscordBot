@@ -4,7 +4,8 @@ import json
 
 
 def _mock_webhook_message():
-  file = open("../res/mock_webhook_message.json")
+  # En Pycharm puede ser que este path sea ../res/mock_webhook_message.json
+  file = open("res/mock_webhook_message.json")
   __json = json.load(file)
   file.close()
   return __json
