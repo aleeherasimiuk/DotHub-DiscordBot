@@ -3,7 +3,7 @@ from main.config import Config
 
 
 class ConfigTest(unittest.TestCase):
-  
+
   def test_config_file_does_not_exist(self):
     with self.assertRaises(Exception):
       Config.from_file("this_file_does_not_exist")
@@ -16,7 +16,7 @@ class ConfigTest(unittest.TestCase):
     }
     with self.assertRaises(Exception) as error:
       Config.from_json(fake_json)
-      
+
   def test_error_on_config_key_key_invalid(self):
     fake_json = {
       'username': 'username',
@@ -26,7 +26,7 @@ class ConfigTest(unittest.TestCase):
     }
     with self.assertRaises(Exception) as error:
       Config.from_json(fake_json)
-    
+
   def test_error_on_config_key_key_missing(self):
     fake_json = {
       'username': 'username',
@@ -35,7 +35,6 @@ class ConfigTest(unittest.TestCase):
     with self.assertRaises(Exception) as error:
       Config.from_json(fake_json)
 
-
   def test_valid_config_username(self):
     valid_json = {
       'username': 'username',
@@ -43,7 +42,7 @@ class ConfigTest(unittest.TestCase):
       'avatar_url': 'avatar_url'
     }
     config = Config.from_json(valid_json)
-    self.assertEquals('username', config.username)
+    self.assertEqual('username', config.username)
 
   def test_valid_config_webhook_url(self):
     valid_json = {
@@ -52,7 +51,7 @@ class ConfigTest(unittest.TestCase):
       'avatar_url': 'avatar_url'
     }
     config = Config.from_json(valid_json)
-    self.assertEquals('https://discord.com/api/webhooks', config.webhook_url)
+    self.assertEqual('https://discord.com/api/webhooks', config.webhook_url)
 
   def test_valid_config_avatar(self):
     valid_json = {
@@ -61,7 +60,7 @@ class ConfigTest(unittest.TestCase):
       'avatar_url': 'avatar_url'
     }
     config = Config.from_json(valid_json)
-    self.assertEquals('avatar_url', config.avatar_url)
+    self.assertEqual('avatar_url', config.avatar_url)
 
   def test_invalid_config_webhook_url(self):
     valid_json = {
@@ -71,5 +70,3 @@ class ConfigTest(unittest.TestCase):
     }
     with self.assertRaises(Exception):
       Config.from_json(valid_json)
-
-  

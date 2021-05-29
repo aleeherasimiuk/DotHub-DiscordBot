@@ -1,6 +1,7 @@
 from main.embed.footer import Footer
 import unittest
 
+
 class FooterTest(unittest.TestCase):
 
   def test_text_not_null(self):
@@ -16,7 +17,7 @@ class FooterTest(unittest.TestCase):
     })
 
     self.assertEqual(footer.text, 'text')
-    
+
   def test_icon(self):
     footer = Footer(**{
       'text': 'texto',
@@ -28,19 +29,17 @@ class FooterTest(unittest.TestCase):
   def test_invalid_icon(self):
     with self.assertRaises(Exception):
       footer = Footer(**{
-      'text': '',
-      'icon_url': "https://google.com/image"
-    })
+        'text': '',
+        'icon_url': "https://google.com/image"
+      })
 
   def test_dict(self):
     footer = Footer(
-        'texto',
-        icon_url="https://google.com/image.jpg"
+      'texto',
+      icon_url="https://google.com/image.jpg"
     )
 
     self.assertDictEqual(footer.to_dict(), {
-        'text': 'texto',
-        'icon_url': "https://google.com/image.jpg"
+      'text': 'texto',
+      'icon_url': "https://google.com/image.jpg"
     })
-
-

@@ -1,6 +1,7 @@
 class Image:
-  url : str
-  def __init__(self, url = ""):
+  url: str
+
+  def __init__(self, url=""):
     self.url = url
     self._validate_image_url(url)
 
@@ -8,7 +9,6 @@ class Image:
     extensions = ['.png', '.jpg', '.jpeg']
     if image_url and not any([extension in image_url for extension in extensions]):
       raise Exception("The image url does not appear to be an image. Please try again. [{}]".format(image_url))
-
 
   def to_dict(self):
     return self.__dict__

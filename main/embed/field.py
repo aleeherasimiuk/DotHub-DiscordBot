@@ -1,12 +1,12 @@
 class Field:
-  name : str
-  value : str
-  inline : bool
+  name: str
+  value: str
+  inline: bool
 
-  def __init__(self, name, value, iniline = False):
+  def __init__(self, name, value, inline=False):
     self.name = name
     self.value = value
-    self.inline = iniline
+    self.inline = inline
 
     self._validate(name)
     self._validate(value)

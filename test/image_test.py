@@ -1,6 +1,7 @@
 from main.embed.image import Image
 import unittest
 
+
 class ImageTest(unittest.TestCase):
 
   def test_url(self):
@@ -12,5 +13,5 @@ class ImageTest(unittest.TestCase):
       image = Image(**{'url': "https://google.com/image"})
 
   def test_to_dict(self):
-    image = Image(**{'url': "https://google.com/image.jpg"}) 
-    self.assertDictEqual(image.to_dict(), {'url': "https://google.com/image.jpg"}) 
+    image = Image(**{'url': "https://google.com/image.jpg"})
+    self.assertDictEqual(image.to_dict(), {'url': "https://google.com/image.jpg"})

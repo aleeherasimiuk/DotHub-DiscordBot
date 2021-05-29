@@ -1,8 +1,8 @@
 import json
+from main.webhook_message import WebhookMessage
+from main.artwork import Artwork
+from main.config import Config
 import time
-from config import Config
-from artwork import Artwork
-from webhook_message import WebhookMessage
 
 
 config = Config.from_file("src/res/mock_config.json")

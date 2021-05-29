@@ -1,18 +1,24 @@
-from typing import Dict
-from embed import Embed
+from main.embed.image import Thumbnail
+from main.embed.embed import Embed
+from main.resource_item import ResourceItem
+from typing import List
+
 
 class Resource(Embed):
-  
-  def __init__(self, title, description, resources: Dict[str, str], thumbnail_url, annotation = None):
-    
+
+  def __init__(self, title, description, resources: List[ResourceItem], thumbnail_url=None, annotation=None):
+
     self.description = description
     self.description += "\n\n"
 
-    for resource_title in resources.keys():
-      self.description += "📚 » [{}]({})\n\n".format(resource_title, resources[resource_title])
-    
+    for resource in resources:
+      self.description += "📚 » {}\n\n".format(resource.build_string())
+
     if annotation:
       self.description += annotation
 
-    
-    super().__init__("**{}**".format(title), self.description, None, None, 46079, thumbnail_url, None)
+    thumbnail = None
+    if thumbnail_url:
+      thumbnail = Thumbnail(thumbnail_url)
+
+    super().__init__("**{}**".format(title), None, self.description, None, None, '46079', thumbnail, None, None, [])

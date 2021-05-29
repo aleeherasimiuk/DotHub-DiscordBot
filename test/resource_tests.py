@@ -1,44 +1,33 @@
+from main.resource_item import ResourceItem
+from main.resource import Resource
 import unittest
-from src.main.resource import Resource
 
 
 class ResourceTest(unittest.TestCase):
-  resource = Resource("Un título", "Una descripcion",
-                      {
-                          "Recurso #1": "https://google.com",
-                          "Recurso #2": "https://google.com.ar",
-                          "Recurso #3": "https://google.com.cl"
-                      },
-                      "https://google.es",
-                      )
+  resource_item_1 = ResourceItem("title1", "https://google.com.ar")
+  resource_item_2 = ResourceItem("title2", "https://google.com.cl", mini_description="google from chile")
+  resource = Resource("title", "description", [resource_item_1, resource_item_2])
 
   def test_title(self):
-    self.assertEqual("**Un título**", self.resource.title)
+    self.assertEqual("**title**", self.resource.title)
 
   def test_description(self):
-    self.assertEqual("Una descripcion\n\n📚 » [Recurso #1](https://google.com)\n\n📚 » [Recurso #2](https://google.com.ar)\n\n📚 » [Recurso #3](https://google.com.cl)\n\n", self.resource.description)
+    self.assertEqual(self.resource.description, "description\n\n📚 » [title1](https://google.com.ar)\n\n📚 » ["
+                                                "title2](https://google.com.cl) (google from chile)\n\n")
 
   def test_thumbnail_url(self):
-    self.assertEqual("https://google.es", self.resource.thumbnail_url)
+    res_with_thumbnail = Resource("title", "description", [self.resource_item_1, self.resource_item_2], thumbnail_url= "https://google.com/image.jpg")
+    self.assertEqual("https://google.com/image.jpg", res_with_thumbnail.thumbnail.url)
 
+  def test_annotation(self):
+    res_with_annotation = Resource("title", "description", [self.resource_item_1, self.resource_item_2], annotation= "an annotation")
+    self.assertEqual(res_with_annotation.description, "description\n\n📚 » [title1](https://google.com.ar)\n\n📚 » ["
+                                                      "title2](https://google.com.cl) (google from chile)\n\nan "
+                                                      "annotation")
 
   def test_color(self):
-    self.assertEqual(self.resource.color, 46079)
+    self.assertEqual(self.resource.color, '46079')
 
-  def test_json(self):
-    dictionary = self.resource.as_dict()
 
-    expected = {
-      'title': '**Un título**',
-      'color': 46079,
-      'description': "Una descripcion\n\n📚 » [Recurso #1](https://google.com)\n\n📚 » [Recurso #2](https://google.com.ar)\n\n📚 » [Recurso #3](https://google.com.cl)\n\n",  
-
-      'thumbnail': {
-        'url': "https://google.es"
-      },
-    }
-
-    self.assertTrue(dictionary, expected)
-  
 if __name__ == '__main__':
     unittest.main()

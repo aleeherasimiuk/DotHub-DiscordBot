@@ -6,3 +6,4 @@ __pycache__/
 !src/res/template_config.json
 !src/res/template_museum.json
 *.code-workspace
+.idea/

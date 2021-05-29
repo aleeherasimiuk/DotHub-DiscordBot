@@ -2,15 +2,14 @@ from typing import Text
 
 
 class Footer:
-  text : str
+  text: str
   icon_url: str
 
-  def __init__(self, text, icon_url = ""):
+  def __init__(self, text, icon_url=""):
     self.text = text
     self.icon_url = icon_url
     self._validate_image_url(icon_url)
     self._validate_text(text)
-
 
   def _validate_image_url(self, image_url):
     extensions = ['.png', '.jpg', '.jpeg']

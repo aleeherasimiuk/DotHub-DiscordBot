@@ -1,80 +1,87 @@
-from src.main.config import Config
-from src.main.artwork import Artwork
+from main.webhook_message import WebhookMessage
+from main.artwork import Artwork
+from main.config import Config
 import unittest
-from src.main.webhook_message import WebhookMessage
+
 
 class TestWebhookMessage(unittest.TestCase):
-  
-  config = Config().from_dict({
-    'webhook_url': 'https://google.com.ar',
-    'avatar_url': 'https://google.com',
-    'colab': 'https://google.com.cl',
-    'username': 'Un Username'
+  config = Config(**{
+    'webhook_url': 'https://discord.com/api/webhooks/0/0',
+    'avatar_url': 'https://google.com/image.jpg',
+    'username': 'username'
   })
-  artwork = Artwork("titulo", "https://google.com", "un_algoritmo", "https://google.com.cl", "https://google.es", "un autor")
-  message = WebhookMessage(config, [artwork, artwork], "un contenido")
-
+  artwork = Artwork("title", "https://google.es", "https://google.com.cl/image.jpg", "un autor")
+  message = WebhookMessage(config, [artwork, artwork], "content")
 
   def test_webhook_url(self):
-    self.assertEqual(self.message.webhook_url, "https://google.com.ar")
-  
+    self.assertEqual(self.message.webhook_url, "https://discord.com/api/webhooks/0/0")
+
+  def test_invalid_webhook_url(self):
+    with self.assertRaises(Exception):
+      Config("username", "https://google.com/image.jpg", "https://google.com")
+
   def test_username(self):
-    self.assertEqual(self.message.username, "Un Username")
+    self.assertEqual(self.message.username, "username")
 
   def test_avatar(self):
-    self.assertEqual(self.message.avatar_url, "https://google.com")
+    self.assertEqual(self.message.avatar_url, "https://google.com/image.jpg")
 
   def test_embeds_len(self):
     self.assertEqual(len(self.message.embeds), 2)
 
   def test_embed_title(self):
-    self.assertEqual(self.message.embeds[0].title, 'titulo')
+    self.assertEqual(self.message.embeds[0].title, 'title')
 
   def test_embed_title2(self):
-    self.assertEqual(self.message.embeds[1].title, 'titulo')
+    self.assertEqual(self.message.embeds[1].title, 'title')
 
   def test_contenido(self):
-    self.assertEqual(self.message.content, "un contenido")
+    self.assertEqual(self.message.content, "content")
 
   def test_json(self):
-    dictionary = self.message.as_dict()
+    dictionary = self.message.to_dict()
+    self.maxDiff = 5000
 
     expected = {
-      'username': 'Un Username',
-      'avatar_url': "https://google.com",
-      'content': "un contenido",  
+      'username': 'username',
+      'avatar_url': "https://google.com/image.jpg",
+      'content': "content",
       'embeds': [
         {
-          'title': 'titulo',
-          'color': 5570309,
-          'description': "Hecho con **un_algoritmo**\n\
-          Pruebalo tú en: [Google Colab](https://google.com.cl)\n\n\
-          [Ver mensaje original](https://google.com)",  
+          'title': 'title',
+          'color': '5570309',
+          'url': "",
+          'description': "Hecho con **VQGAN + CLIP**\n\n[Ver mensaje original](https://google.es)",
           'author': {
-            'name': 'un autor'
+            'name': '@un autor',
+            'url': "",
+            'icon_url': ""
           },
           'image': {
-            'url': "https://google.es"
+            'url': "https://google.com.cl/image.jpg"
           },
+          'timestamp': ""
         },
         {
-          'title': 'titulo',
-          'color': 5570309,
-          'description': "Hecho con **un_algoritmo**\n\
-          Pruebalo tú en: [Google Colab](https://google.com.cl)\n\n\
-          [Ver mensaje original](https://google.com)",  
+          'title': 'title',
+          'color': '5570309',
+          'url': "",
+          'description': "Hecho con **VQGAN + CLIP**\n\n[Ver mensaje original](https://google.es)",
           'author': {
-            'name': 'un autor'
+            'name': '@un autor',
+            'url': "",
+            'icon_url': ""
           },
           'image': {
-            'url': "https://google.es"
+            'url': "https://google.com.cl/image.jpg"
           },
-        }
+          'timestamp': ""
+        },
       ]
     }
 
-    self.assertTrue(dictionary, expected)
+    self.assertDictEqual(expected, dictionary)
 
 
 if __name__ == '__main__':
-    unittest.main()
+  unittest.main()
