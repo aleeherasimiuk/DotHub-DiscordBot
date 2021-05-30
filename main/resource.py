@@ -22,3 +22,9 @@ class Resource(Embed):
       thumbnail = Thumbnail(thumbnail_url)
 
     super().__init__("**{}**".format(title), None, self.description, None, None, '46079', thumbnail, None, None, [])
+
+  @classmethod
+  def from_dict(cls, title, description, resources, thumbnail_url = None, annotation = None):
+
+    return cls(title, description, [ResourceItem(**item) for item in resources], thumbnail_url, annotation)
+    
