@@ -30,5 +30,9 @@ def challenge():
   print(request.data)  # binary literal with xml payload
 
   return '', 204
+
+@app.route("/")
+def hello():
+  return "Hola Dothub!"
   
 app.run(host='0.0.0.0', port= 8090)
