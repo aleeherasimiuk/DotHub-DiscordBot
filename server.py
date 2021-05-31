@@ -15,7 +15,7 @@ def receive_youtube_notification():
   channel_url = soup.entry.author.uri.string
   channel_name = soup.entry.author.find('name').string
 
-  config = Config.from_file('res/mock_notifications_config.json')
+  config = Config.from_file('res/notifications_config.json')
   youtube_message = Youtube(config, channel_name, channel_url, title, video_url)
   youtube_message.send()    
   return "Received: {}".format(soup)
@@ -35,3 +35,5 @@ def challenge():
 def hello():
   return "Hola Dothub!"
   
+if __name__ == "__main__":
+  app.run(host="0.0.0.0")
