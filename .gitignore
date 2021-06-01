@@ -7,3 +7,4 @@ __pycache__/
 !src/res/template_museum.json
 *.code-workspace
 .idea/
+*.log
