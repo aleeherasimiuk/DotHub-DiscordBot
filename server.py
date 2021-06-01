@@ -4,6 +4,7 @@ from flask import Flask
 from flask import request
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
+import json
   
 app = Flask(__name__)
   
@@ -31,16 +32,6 @@ def challenge():
 
   return '', 204
 
-@app.route('/twitch_stream', methods = ['GET'])
-def challenge_twitch():
-  challenge = request.args.get('hub.challenge')
-
-  if challenge:
-    return challenge
-  
-  print(request.data)
-
-  return '', 204
 
 @app.route("/")
 def hello():
@@ -48,8 +39,13 @@ def hello():
 
 @app.route('/twitch_stream', methods = ['POST'])
 def receive_twitch_notification():
-  print(request.get_data())
-  return "Received!"
+  _json = json.loads(request.get_data())
+
+  if 'challenge' in _json.keys():
+    return _json['challenge']
+  
+  print(_json)
+  return 204
   
 if __name__ == "__main__":
   app.run(host="0.0.0.0")
