@@ -74,6 +74,21 @@ def receive_twitch_notification():
   twitch_notification.send()
   
   return '', 204
+
+@app.route('/twitch_stream_test', methods = ['POST'])
+def receive_twitch_notification_test():
+  _json = json.loads(request.get_data())
+
+  data = _json['data'][0]
+  user_name = data['user_name']
+  user_login = data['user_login']
+  title = data['title']
+
+  config = Config.from_file('res/notifications_config.json')
+  twitch_notification = Twitch(config, user_name, user_login, title)
+  twitch_notification.send()
+  
+  return '', 204
   
 if __name__ == "__main__":
   app.run(host="0.0.0.0")
