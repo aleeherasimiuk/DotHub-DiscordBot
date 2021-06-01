@@ -64,7 +64,7 @@ def receive_twitch_notification():
     app.logger.error("There was an error retrieving stream name from twitch: {}".format(err))
 
 
-  data = response['data']
+  data = response.json()['data'][0]
   user_name = data['user_name']
   user_login = data['user_login']
   title = data['title']
