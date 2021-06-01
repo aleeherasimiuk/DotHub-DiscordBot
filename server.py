@@ -5,8 +5,11 @@ from flask import request
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 import json
+import logging
   
 app = Flask(__name__)
+LOG_FILENAME = '~/errores.log'
+logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
   
 @app.route('/youtube_video', methods = ['POST'])
 def receive_youtube_notification():
@@ -45,6 +48,7 @@ def receive_twitch_notification():
     return _json['challenge']
   
   print(_json)
+  app.logger.info(_json)
   return 204
   
 if __name__ == "__main__":
