@@ -27,13 +27,29 @@ def challenge():
   if challenge:
     return challenge
   
-  print(request.data)  # binary literal with xml payload
+  print(request.data)
+
+  return '', 204
+
+@app.route('/twitch_stream', methods = ['GET'])
+def challenge_twitch():
+  challenge = request.args.get('hub.challenge')
+
+  if challenge:
+    return challenge
+  
+  print(request.data)
 
   return '', 204
 
 @app.route("/")
 def hello():
   return "Hola Dothub!"
+
+@app.route('/twitch_stream', methods = ['POST'])
+def receive_youtube_notification():
+  print(request.get_data())
+  return "Received!"
   
 if __name__ == "__main__":
   app.run(host="0.0.0.0")
