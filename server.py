@@ -54,6 +54,7 @@ def receive_twitch_notification():
   user_id = _json['user_id']
   client_id = _json['client_id']
   auth_token = _json['auth_token']
+  file.close()
 
   response = requests.get("https://api.twitch.tv/helix/streams?user_id={}".format(user_id), headers={'client-id': client_id, 'authorization':auth_token})
 
