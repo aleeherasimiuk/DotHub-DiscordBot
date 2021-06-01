@@ -47,7 +47,7 @@ def hello():
   return "Hola Dothub!"
 
 @app.route('/twitch_stream', methods = ['POST'])
-def receive_youtube_notification():
+def receive_twitch_notification():
   print(request.get_data())
   return "Received!"
   
