@@ -11,7 +11,7 @@ class YoutubeNotification(WebhookMessage):
 
   def __init__(self, config: Config, channel_name, channel_url, title, video_url):
     self.channel_name = channel_name
-    self.channel_url = channel_url,
+    self.channel_url = channel_url
     self.title = title
     self.video_url = video_url
 
@@ -26,5 +26,5 @@ class YoutubeNotification(WebhookMessage):
     channel_url = soup.entry.author.uri.string
     channel_name = soup.entry.author.find('name').string
 
-    return Youtube(config, channel_name, channel_url, title, video_url)
+    return YoutubeNotification(config, channel_name, channel_url, title, video_url)
 

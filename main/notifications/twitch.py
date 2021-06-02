@@ -33,9 +33,10 @@ class TwitchNotificationBuilder:
     self._client_id  = client_id
     self._auth_token = auth_token
 
-
   def _make_request(self):
-    response = requests.get("https://api.twitch.tv/helix/streams?user_id={}".format(self._user_id), headers={'client-id': self._client_id, 'authorization': self._auth_token})
+    return requests.get("https://api.twitch.tv/helix/streams?user_id={}".format(self._user_id), headers={'client-id': self._client_id, 'authorization': self._auth_token})
+    
+  def _process_request(self, response):
     self._validate_response(response)
     self._get_data_from_response(response)
 
@@ -59,6 +60,7 @@ class TwitchNotificationBuilder:
 
 
   def build_twitch_notification(self, config: Config):
-    self._make_request()
+    response = self._make_request()
+    self._process_request(response)
     return TwitchNotification(config, self.user_name, self.user_login, self.stream_title)
-    
+
