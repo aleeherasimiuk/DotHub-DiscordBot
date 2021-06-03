@@ -59,8 +59,8 @@ class MyClient(discord.Client):
         logger.info("Fetching ended. Saving file.")
         self.save_file()
 
-        next_starting_point = last_message.id()
-        logger.info(f"Next starting point: {id}")
+        next_starting_point = last_message.id
+        logger.info(f"Next starting point: {next_starting_point}")
         self.config.change_starting_point(next_starting_point, 'res/bot.json')
         logger.info("Finished")
 
