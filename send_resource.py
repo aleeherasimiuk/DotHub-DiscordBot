@@ -5,13 +5,13 @@ from main.artwork import Artwork
 from main.config import Config
 import time
 
-config = Config.from_file("res/mock_config.json") # Pycharm => agregar ../
+config = Config.from_file("res/mock_config.json")  # Pycharm => agregar ../
 
 file = open('res/resources.json')
 resource = json.load(file)
 
 res = Resource.from_dict(**resource)
-message = WebhookMessage(config, embeds = [res], content = "")
+message = WebhookMessage(config, embeds=[res], content="")
 message.send()
 
 file.close()

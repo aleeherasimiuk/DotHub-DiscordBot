@@ -12,8 +12,8 @@ file2.close()
 
 url = 'https://pubsubhubbub.appspot.com'
 
-x = requests.post(url, data = update_params)
-y = requests.post(url, data = update_params2)
+x = requests.post(url, data=update_params)
+y = requests.post(url, data=update_params2)
 print("Updated subsciptions: {}".format(datetime.now()))
 print(x)
 print(y)

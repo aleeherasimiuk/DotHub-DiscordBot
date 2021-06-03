@@ -6,25 +6,24 @@ from typing import List
 
 class Resource(Embed):
 
-  def __init__(self, title, description, resources: List[ResourceItem], thumbnail_url=None, annotation=None):
+    def __init__(self, title, description, resources: List[ResourceItem], thumbnail_url=None, annotation=None):
 
-    self.description = description
-    self.description += "\n\n"
+        self.description = description
+        self.description += "\n\n"
 
-    for resource in resources:
-      self.description += "📚 » {}\n\n".format(resource.build_string())
+        for resource in resources:
+            self.description += "📚 » {}\n\n".format(resource.build_string())
 
-    if annotation:
-      self.description += annotation
+        if annotation:
+            self.description += annotation
 
-    thumbnail = None
-    if thumbnail_url:
-      thumbnail = Thumbnail(thumbnail_url)
+        thumbnail = None
+        if thumbnail_url:
+            thumbnail = Thumbnail(thumbnail_url)
 
-    super().__init__("**{}**".format(title), None, self.description, None, None, '46079', thumbnail, None, None, [])
+        super().__init__("**{}**".format(title), None, self.description, None, None, '46079', thumbnail, None, None, [])
 
-  @classmethod
-  def from_dict(cls, title, description, resources, thumbnail_url = None, annotation = None):
+    @classmethod
+    def from_dict(cls, title, description, resources, thumbnail_url=None, annotation=None):
 
-    return cls(title, description, [ResourceItem(**item) for item in resources], thumbnail_url, annotation)
-    
+        return cls(title, description, [ResourceItem(**item) for item in resources], thumbnail_url, annotation)
