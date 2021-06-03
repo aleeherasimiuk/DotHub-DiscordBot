@@ -52,8 +52,7 @@ class MyClient(discord.Client):
         logger.info("Finished")
 
     async def is_artwork(self, message):
-        reaction_with_art_icon = find(
-            lambda x: x.emoji == self.emoji, message.reactions)
+        reaction_with_art_icon = find(lambda reaction: reaction.emoji == self.emoji, message.reactions)
         if not reaction_with_art_icon:
             return False
 
@@ -67,7 +66,7 @@ class MyClient(discord.Client):
         channel = await self.fetch_channel(_json['channel_id'])
         logger.info(f'Scanning channel: #{channel}')
         starting_point = await channel.fetch_message(_json['starting_point'])
-        return channel.history(after=starting_point).filter(lambda x: x.attachments)
+        return channel.history(after=starting_point).filter(lambda message: message.attachments)
 
     async def on_message(self, message):
         pass
