@@ -7,12 +7,14 @@ class FetchingConfig:
     channel_id: str
     allowed_reactors: List[str]
     starting_point: str
+    save_path: str
 
-    def __init__(self, token, channel_id, allowed_reactors, starting_point):
+    def __init__(self, token, channel_id, allowed_reactors, starting_point, save_path):
         self.token = token
         self.channel_id = channel_id
         self.allowed_reactors = allowed_reactors
         self.starting_point = starting_point
+        self.save_path = save_path
 
     @classmethod
     def from_file(cls, path):

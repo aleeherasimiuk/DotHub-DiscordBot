@@ -34,6 +34,7 @@ class MyClient(discord.Client):
         logger.info('Logged on as {0}!'.format(self.user))
         messages_with_image = await self.fetch_messages_with_image()
 
+        last_message = None
         async for message in messages_with_image:
 
             if not await self.is_artwork(message): 
@@ -47,12 +48,19 @@ class MyClient(discord.Client):
 
             artwork_json = artwork.to_dict()
             self.artworks.append(artwork_json)
+            last_message = message
 
         logger.info("Fetching ended. Saving file.")
-        with open('res/pending_artworks.json', 'w') as f:
-            json.dump(self.artworks, f)
+        self.save_file()
 
+        next_starting_point = last_message.id
+        logger.info(f"Next starting point: {id}")
+        self.config.change_starting_point(next_starting_point)
         logger.info("Finished")
+
+    def save_file(self):
+        with open(self.config.save_path, 'w') as f:
+            json.dump(self.artworks, f)
 
     async def is_artwork(self, message):
         reaction_with_art_icon = find(lambda reaction: reaction.emoji == self.emoji, message.reactions)
