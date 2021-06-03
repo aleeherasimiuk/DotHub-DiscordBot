@@ -1,3 +1,4 @@
+import os
 from main.fetching_config import FetchingConfig
 import sys
 import discord
@@ -50,17 +51,29 @@ class MyClient(discord.Client):
             self.artworks.append(artwork_json)
             last_message = message
 
+        
+        if not last_message:
+            logger.info("No artworks were retrieved")
+            return
+         
         logger.info("Fetching ended. Saving file.")
         self.save_file()
 
-        next_starting_point = last_message.id
+        next_starting_point = last_message.id()
         logger.info(f"Next starting point: {id}")
-        self.config.change_starting_point(next_starting_point)
+        self.config.change_starting_point(next_starting_point, 'res/bot.json')
         logger.info("Finished")
 
     def save_file(self):
+        old_pending_artworks = []
+        if os.path.getsize(self.config.save_path):
+            with open(self.config.save_path, 'r') as f:
+                old_pending_artworks = json.load(f)
+
         with open(self.config.save_path, 'w') as f:
-            json.dump(self.artworks, f)
+            old_pending_artworks.extend(self.artworks)
+            json.dump(old_pending_artworks, f)
+        self.artworks = []
 
     async def is_artwork(self, message):
         reaction_with_art_icon = find(lambda reaction: reaction.emoji == self.emoji, message.reactions)

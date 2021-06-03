@@ -24,4 +24,4 @@ class FetchingConfig:
     def change_starting_point(self, new_starting_point, path):
         self.starting_point = new_starting_point
         with open(path, 'w') as f:
-            json.dump(self, f)
+            json.dump(self.__dict__, f)
