@@ -26,6 +26,7 @@ class MyClient(discord.Client):
     artworks = []
     emoji = '🎨'
     config: FetchingConfig
+    last_message: None
 
     def __init__(self):
         self.config = FetchingConfig.from_file('res/bot.json')
@@ -34,34 +35,22 @@ class MyClient(discord.Client):
     async def on_ready(self):
         logger.info('Logged on as {0}!'.format(self.user))
         messages_with_image = await self.fetch_messages_with_image()
-
-        last_message = None
-        async for message in messages_with_image:
-
-            if not await self.is_artwork(message): 
-                continue
-            
-            await message.clear_reaction(emoji = self.emoji)
-            await message.add_reaction(emoji = self.emoji)
-
-            artwork = Artwork.from_discord_message(message)
-            logger.info(f"Fetching: {artwork.title}")
-
-            artwork_json = artwork.to_dict()
-            self.artworks.append(artwork_json)
-            last_message = message
-
+        raw_artworks = messages_with_image.filter(self.is_artwork)
+        _processed_artworks = raw_artworks.map(self.process_artwork)
+        self.artworks = await _processed_artworks.map(lambda x: x.to_dict()).flatten()
         
-        if not last_message:
+
+        if not self.last_message:
             logger.info("No artworks were retrieved")
             return
          
         logger.info("Fetching ended. Saving file.")
         self.save_file()
 
-        next_starting_point = last_message.id
+        next_starting_point = self.last_message.id
         logger.info(f"Next starting point: {next_starting_point}")
         self.config.change_starting_point(next_starting_point, 'res/bot.json')
+        self.last_message = None
         logger.info("Finished")
 
     def save_file(self):
@@ -91,6 +80,15 @@ class MyClient(discord.Client):
         logger.info(f'Scanning channel: #{channel}')
         starting_point = await channel.fetch_message(self.config.starting_point)
         return channel.history(after=starting_point).filter(lambda message: message.attachments)
+
+    async def process_artwork(self, message):
+        await message.clear_reaction(emoji = self.emoji)
+        await message.add_reaction(emoji = self.emoji)
+
+        _artwork = Artwork.from_discord_message(message)
+        logger.info(f"Fetching: {_artwork.title}")
+        self.last_message = message
+        return _artwork
 
     async def on_message(self, message):
         pass
