@@ -13,7 +13,7 @@ from main.config import Config
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)
 file_handler = logging.FileHandler(
-    filename='discord.log', encoding='utf-8', mode='w')
+    filename='discord.log', encoding='utf-8', mode='a')
 file_handler.setFormatter(logging.Formatter(
     '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 stdout_handler = logging.StreamHandler(sys.stdout)
@@ -35,9 +35,11 @@ class MyClient(discord.Client):
 
         async for message in messages_with_image:
 
-            if await self.is_artwork(message):
-                await message.clear_reaction(emoji=self.emoji)
-                await message.add_reaction(emoji=self.emoji)
+            if not await self.is_artwork(message): 
+                continue
+            
+            await message.clear_reaction(emoji = self.emoji)
+            await message.add_reaction(emoji = self.emoji)
 
             artwork = Artwork.from_discord_message(message)
             logger.info(f"Fetching: {artwork.title}")
