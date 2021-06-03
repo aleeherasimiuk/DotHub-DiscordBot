@@ -1,3 +1,4 @@
+from main.fetching_config import FetchingConfig
 import sys
 import discord
 import logging
@@ -20,14 +21,14 @@ stdout_handler = logging.StreamHandler(sys.stdout)
 logger.addHandler(file_handler)
 logger.addHandler(stdout_handler)
 
-file = open('res/bot.json', 'r')
-_json = json.load(file)
-file.close()
-
-
 class MyClient(discord.Client):
     artworks = []
     emoji = '🎨'
+    config: FetchingConfig
+
+    def __init__(self):
+        self.config = FetchingConfig.from_file('res/bot.json')
+        super().__init__()
 
     async def on_ready(self):
         logger.info('Logged on as {0}!'.format(self.user))
@@ -62,12 +63,12 @@ class MyClient(discord.Client):
         return await users_reacted.find(self.is_allowed_reactor)
 
     def is_allowed_reactor(self, user):
-        return f"{user.name}#{user.discriminator}" in _json['allowed_reactors']
+        return f"{user.name}#{user.discriminator}" in self.config.allowed_reactors
 
     async def fetch_messages_with_image(self):
-        channel = await self.fetch_channel(_json['channel_id'])
+        channel = await self.fetch_channel(self.config.channel_id)
         logger.info(f'Scanning channel: #{channel}')
-        starting_point = await channel.fetch_message(_json['starting_point'])
+        starting_point = await channel.fetch_message(self.config.starting_point)
         return channel.history(after=starting_point).filter(lambda message: message.attachments)
 
     async def on_message(self, message):
@@ -75,4 +76,4 @@ class MyClient(discord.Client):
 
 
 client = MyClient()
-client.run(_json['token'])
+client.run(client.config.token)
