@@ -9,6 +9,7 @@ class Artwork(Embed):
   date = None
   original_message = None
   uploaded = False
+  title: str
 
   def __init__(self, title, original_message, image_url, author, date=datetime.now(), uploaded = False):
     description = "Hecho con **VQGAN + CLIP**\n[Ver mensaje original]({})".format(original_message)
@@ -29,3 +30,8 @@ class Artwork(Embed):
   @classmethod
   def _get_bad_keyword(cls, error):
     return error.args[0].split("'")[1]
+
+
+  @classmethod
+  def from_discord_message(cls, message):
+    return Artwork(message.content, message.jump_url, message.attachments[0].url, message.author.display_name)
