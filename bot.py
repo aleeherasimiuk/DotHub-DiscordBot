@@ -164,7 +164,7 @@ async def on_message(message):
             xmp_end = d.find(b'</x:xmpmeta')
             xmp_str = d[xmp_start:xmp_end+12]
             if not xmp_str:
-                await message.channel.send("Esta imagen no contiene metadatos en XMP.", reference=msg)
+                await message.channel.send("Esta imagen no contiene metadatos en XMP.", reference=msg, mention_author=False)
                 return
             o = xmltodict.parse(xmp_str)
             meta_string = json.dumps(o)
@@ -175,7 +175,7 @@ async def on_message(message):
             model = meta["dc:model"]["rdf:Seq"]["rdf:li"]
             i = meta["dc:i"]["rdf:Seq"]["rdf:li"]
             seed = meta["dc:seed"]["rdf:Seq"]["rdf:li"]
-            await message.channel.send(f"**Notebook:** {notebook}\n**Título(s):** {title}\n**Modelo:** {model}\n**Iteraciones:** {i}\n**Seed:** {seed}", reference=msg)
+            await message.channel.send(f"**Notebook:** {notebook}\n**Título(s):** {title}\n**Modelo:** {model}\n**Iteraciones:** {i}\n**Seed:** {seed}", reference=msg, mention_author=False)
     await bot.process_commands(message)
             
    
