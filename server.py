@@ -10,7 +10,7 @@ import logging
 import requests
 
 app = Flask(__name__)
-LOG_FILENAME = './errores.log'
+LOG_FILENAME = 'logs/errores.log'
 logging.basicConfig(filename=LOG_FILENAME, level=logging.DEBUG)
 
 
@@ -88,6 +88,11 @@ def receive_twitch_notification_test():
 @app.route('/logs')
 def logs():
     file = open(LOG_FILENAME, "r")
+    return file.read()
+
+@app.route('/dotesting')
+def logs():
+    file = open("logs/dotesting.log", "r")
     return file.read()
 
 
