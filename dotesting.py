@@ -1,3 +1,5 @@
+from discord import webhook
+from main.config import Config
 import discord
 import asyncio
 from discord.ext import commands
@@ -8,6 +10,9 @@ import contextlib
 import random
 from contextlib import *
 import datetime
+
+from main.webhook_message import WebhookMessage
+from main.embed.info import Info
 import xmltodict, json
 import aiohttp
 import logging
@@ -35,6 +40,8 @@ logger.addHandler(file_handler)
 bot_config = None
 with open("res/dotesting.json") as file:
     bot_config = json.load(file)
+
+info_config = Config.from_json(bot_config['info'])
 
 @bot.event
 async def on_ready():
@@ -174,7 +181,8 @@ async def on_message(message):
             xmp_end = d.find(b'</x:xmpmeta')
             xmp_str = d[xmp_start:xmp_end+12]
             if not xmp_str:
-                await message.channel.send("Esta imagen no contiene metadatos en XMP.", reference=msg, mention_author=False)
+                send_info_not_found(message.author.id)
+                #await message.channel.send("Esta imagen no contiene metadatos en XMP.", reference=msg, mention_author=False)
                 return
             o = xmltodict.parse(xmp_str)
             meta_string = json.dumps(o)
@@ -185,8 +193,18 @@ async def on_message(message):
             model = meta["dc:model"]["rdf:Seq"]["rdf:li"]
             i = meta["dc:i"]["rdf:Seq"]["rdf:li"]
             seed = meta["dc:seed"]["rdf:Seq"]["rdf:li"]
-            await message.channel.send(f"**Notebook:** {notebook}\n**Título(s):** {title}\n**Modelo:** {model}\n**Iteraciones:** {i}\n**Seed:** {seed}", reference=msg, mention_author=False)
+            send_info(message.author.id, notebook, title, model, i, seed, msg.author.id)
+            #await message.channel.send(f"**Notebook:** {notebook}\n**Título(s):** {title}\n**Modelo:** {model}\n**Iteraciones:** {i}\n**Seed:** {seed}", reference=msg, mention_author=False)
     await bot.process_commands(message)
             
    
+def send_info(id, notebook, title, model, iterations, seed, author_id):
+    info = Info(notebook, title, model, iterations, seed, author_id)
+    webhook_message = WebhookMessage(info_config, [info], content=f"<@{id}>")
+    webhook_message.send()
+
+def send_info_not_found(id):
+    webhook_message = WebhookMessage(info_config, [], f"<@{id}>\nNo he podido obtener información acerca de esa imagen 😔")
+    webhook_message.send()
+
 bot.run(bot_config['token'])
