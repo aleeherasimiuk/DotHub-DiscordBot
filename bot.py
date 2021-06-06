@@ -22,6 +22,10 @@ intents.presences = True
 bot = commands.Bot(command_prefix="$", description=description, intents=intents)
 bot.remove_command('help')
 
+bot_config = None
+with open("res/dotesting.json") as file:
+    bot_config = json.load(file)
+
 @bot.event
 async def on_ready():
     print('Conectado como:')
@@ -40,7 +44,7 @@ async def avatar(ctx, member : discord.Member = None):
 
 @bot.command()
 async def scrap(ctx):
-    if ctx.author.id != 239203656405221376:
+    if ctx.author.id not in bot_config['allowed_ids']:
         return
     messages = []
     print("Started")
@@ -83,7 +87,7 @@ async def scrap(ctx):
 
 @bot.command()
 async def scrap_images(ctx):
-    if ctx.author.id != 239203656405221376:
+    if ctx.author.id not in bot_config['allowed_ids']:
         return
     await ctx.send("Iniciando scraping...")
     messages = []
@@ -107,13 +111,9 @@ async def scrap_images(ctx):
         json.dump(messages, f)
 
 
-
-
-
-
 @bot.command()
 async def eval(ctx, *, body: str):
-    if ctx.author.id != 239203656405221376:
+    if ctx.author.id not in bot_config['allowed_ids']:
         return
     """Evaluates a code"""
     env = {
@@ -179,4 +179,4 @@ async def on_message(message):
     await bot.process_commands(message)
             
    
-bot.run('token_del_bot')
+bot.run(bot_config['token'])
