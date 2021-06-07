@@ -1,5 +1,5 @@
-from main.notifications.twitch import Twitch, TwitchNotificationBuilder
-from main.notifications.youtube import Youtube, YoutubeNotification
+from main.notifications.twitch import TwitchNotification, TwitchNotificationBuilder
+from main.notifications.youtube import YoutubeNotification
 from main.config import Config
 from flask import Flask, config
 from flask import request
@@ -91,9 +91,9 @@ def logs():
     return file.read()
 
 @app.route('/dotesting')
-def logs():
+def dotesting_logs():
     file = open("logs/dotesting.log", "r")
-    return file.read()
+    return "<br>".join(file.read().splitlines())
 
 
 if __name__ == "__main__":
