@@ -8,3 +8,5 @@ __pycache__/
 *.code-workspace
 .idea/
 *.log
+
+!dotesting.sample.json
