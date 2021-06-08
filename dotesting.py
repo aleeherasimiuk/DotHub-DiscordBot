@@ -58,7 +58,7 @@ async def avatar(ctx, member : discord.Member = None):
 @bot.command()
 async def scrap(ctx):
     if ctx.author.id not in bot_config['allowed_ids']:
-        logger.warn("{ctx.author.id} attempted to scrap messages. Not allowed")
+        logger.warn(f"{ctx.author.id} attempted to scrap messages. Not allowed")
         return
     messages = []
     logger.info("Scrapping started")
@@ -102,7 +102,7 @@ async def scrap(ctx):
 @bot.command()
 async def scrap_images(ctx):
     if ctx.author.id not in bot_config['allowed_ids']:
-        logger.warn("{ctx.author.id} attempted to scrap images. Not allowed")
+        logger.warn(f"{ctx.author.id} attempted to scrap images. Not allowed")
         return
     await ctx.send("Iniciando scraping...")
     logger.info(f"Scrapping imaged on: {ctx.channel.name}")
@@ -130,8 +130,14 @@ async def scrap_images(ctx):
 @bot.command()
 async def eval(ctx, *, body: str):
     if ctx.author.id not in bot_config['allowed_ids']:
-        logger.warn("{ctx.author.id} attempted to eval an expression. Not allowed")
+        logger.warn(f"{ctx.author.id} attempted to eval an expression. Not allowed")
         return
+    
+    if "sudo" in body:
+        logger.warn(f"{ctx.author.id} attempted to eval an expression with sudo. Not allowed")
+        ctx.send('👀')
+        return
+
     """Evaluates a code"""
     env = {
         'bot': bot,
@@ -214,7 +220,7 @@ async def on_message(message):
                 return
             metadata.update(id=message.author.id, author_id=msg.author.id)
             send_info(**metadata)
-            await bot.process_commands(message)
+    await bot.process_commands(message)
 
    
 def send_info(id, notebook, title, model, i, seed, author_id):
@@ -229,7 +235,7 @@ def send_info_not_found(id):
 @bot.command()
 async def ping(ctx):
     if ctx.author.id not in bot_config['allowed_ids']:
-        logger.warn("{ctx.author.id} attempted to ping. Not allowed")
+        logger.warn(f"{ctx.author.id} attempted to ping. Not allowed")
         return
     await ctx.send("Pong")
 
