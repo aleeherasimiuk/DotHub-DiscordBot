@@ -174,10 +174,6 @@ def get_metadata_from_xmp(stream):
     xmp_str   = stream[xmp_start:xmp_end+12]
     if not xmp_str:
         return None
-    #metadata_dict = xmltodict.parse(xmp_str)
-    #meta_string   = json.dumps(metadata_dict)
-
-    #meta     = json.loads(meta_string)
     metadata = xmltodict.parse(xmp_str)
     meta     = metadata["x:xmpmeta"]["rdf:RDF"]["rdf:Description"]
     notebook = meta["dc:creator"]["rdf:Seq"]["rdf:li"]
@@ -209,7 +205,10 @@ async def on_message(message):
                     stream = await resp.read()
             metadata = get_metadata_from_xmp(stream)
             if not metadata:
-                metadata = get_metadata_from_steno(stream)
+                try:
+                    metadata = get_metadata_from_steno(stream)
+                except:
+                    metadata = None
             if not metadata:
                 send_info_not_found(message.author.id)
                 return
@@ -223,12 +222,15 @@ def send_info(id, notebook, title, model, i, seed, author_id):
     webhook_message = WebhookMessage(info_config, [info], content=f"<@{id}>")
     webhook_message.send()
 
-def send_info_json(m):
-    webhook_message = WebhookMessage(info_config, [], f"{m}")
-    webhook_message.send()
-
 def send_info_not_found(id):
     webhook_message = WebhookMessage(info_config, [], f"<@{id}>\nNo he podido obtener información acerca de esa imagen 😔")
     webhook_message.send()
+
+@bot.command()
+async def ping(ctx):
+    if ctx.author.id not in bot_config['allowed_ids']:
+        logger.warn("{ctx.author.id} attempted to ping. Not allowed")
+        return
+    await ctx.send("Pong")
 
 bot.run(bot_config['token'])
