@@ -214,7 +214,7 @@ async def on_message(message):
                 return
             metadata.update(id=message.author.id, author_id=msg.author.id)
             send_info(**metadata)
-            await bot.process_commands(message)
+    await bot.process_commands(message)
 
    
 def send_info(id, notebook, title, model, i, seed, author_id):
