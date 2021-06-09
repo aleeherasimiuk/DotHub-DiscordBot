@@ -135,7 +135,7 @@ async def eval(ctx, *, body: str):
     
     if "sudo" in body:
         logger.warn(f"{ctx.author.id} attempted to eval an expression with sudo. Not allowed")
-        ctx.send('👀')
+        await ctx.send('👀')
         return
 
     """Evaluates a code"""
