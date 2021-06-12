@@ -13,7 +13,7 @@ class TwitchNotification(WebhookMessage):
         self.user_login = user_login
         self.stream_title = title
 
-        content = "Hey! [@{}](https://twitch.tv/{}) está en directo en Twitch: **{}**.\nNo te lo pierdas!".format(
+        content = "Hey @everyone! [{}](https://twitch.tv/{}) está en directo en Twitch: **{}**.\nNo te lo pierdas!".format(
             user_name, user_login, title)
         super().__init__(config, [], content=content)
 

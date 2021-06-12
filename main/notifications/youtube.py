@@ -15,7 +15,7 @@ class YoutubeNotification(WebhookMessage):
         self.title = title
         self.video_url = video_url
 
-        content = "Hey! [@{}](<{}>) ha subido un nuevo [vídeo]({})!".format(channel_name, channel_url, video_url)
+        content = "Hey @everyone! [{}](<{}>) ha subido un nuevo [vídeo]({})!".format(channel_name, channel_url, video_url)
         super().__init__(config, [], content=content)
 
     @classmethod
