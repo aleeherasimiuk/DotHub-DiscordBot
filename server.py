@@ -10,19 +10,30 @@ import logging
 import requests
 
 app = Flask(__name__)
-LOG_FILENAME = 'logs/errores.log'
-logging.basicConfig(filename=LOG_FILENAME, level=logging.DEBUG)
+SERVER_LOG_FILENAME = 'logs/errores.log'
+DOTESTING_LOG_FILENAME = "logs/dotesting.log"
+app.logger.setLevel(logging.debug)
+file_handler = logging.FileHandler(filename=SERVER_LOG_FILENAME, encoding='utf-8', mode='a')
+file_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+app.logger.addHandler(file_handler)
+last_sent_youtube_notification = ""
+last_sent_twitch_notification = ""
 
 
 @app.route('/youtube_video', methods=['POST'])
 def receive_youtube_notification():
+    global last_sent_youtube_notification
     app.logger.info("Received youtube notification.")
+    app.logger.debug("Received youtube payload: {}".format(request.get_data()))
 
     config = Config.from_file('res/notifications_config.json')
     youtube_message = YoutubeNotification.from_xml(config, request.get_data())
 
-    app.logger.info("Sending webhook message for: {} - {}".format(youtube_message.channel_name, youtube_message.title))
-    youtube_message.send()
+    if youtube_message.title != last_sent_youtube_notification:
+        app.logger.info("Sending webhook message for: {} - {}".format(youtube_message.channel_name, youtube_message.title))
+        youtube_message.send()
+        last_sent_youtube_notification = youtube_message.title
+    
     return "", 204
 
 
@@ -44,21 +55,25 @@ def hello():
 
 @app.route('/twitch_stream', methods=['POST'])
 def receive_twitch_notification():
+    global last_sent_twitch_notification
     _json = json.loads(request.get_data())
+    app.logger.debug("Received twitch payload: {}".format(request.get_data()))
 
     if 'challenge' in _json.keys():
         challenge = _json['challenge']
         app.logger.info("Challenge for youtube subscription received: {}".format(challenge))
         return challenge
 
-    file = open('res/twitch_config.json')
-    _json = json.load(file)
-    file.close()
+    with open('res/twitch_config.json') as file:
+        _json = json.load(file)
+
 
     try:
         config = Config.from_file('res/notifications_config.json')
         twitch_notification = TwitchNotificationBuilder(**_json).build_twitch_notification(config)
-        twitch_notification.send()
+        if twitch_notification.stream_title not in last_sent_twitch_notification:
+            twitch_notification.send()
+            last_sent_twitch_notification = twitch_notification.stream_title
     except Exception as e:
         app.logger.error("Can't send twitch notification: {}".format(e))
 
@@ -79,7 +94,7 @@ def receive_twitch_notification_test():
     app.logger.info("Received test twitch notification: {} - {}".format(user_name, title))
 
     config = Config.from_file('res/notifications_config.json')
-    twitch_notification = Twitch(config, user_name, user_login, title)
+    twitch_notification = TwitchNotification(config, user_name, user_login, title)
     twitch_notification.send()
 
     return '', 204
@@ -87,13 +102,15 @@ def receive_twitch_notification_test():
 
 @app.route('/logs')
 def logs():
-    file = open(LOG_FILENAME, "r")
-    return "<br>".join(file.read().splitlines())
+    with open(SERVER_LOG_FILENAME, "r") as file:
+        lines = file.read().splitlines()
+    return "<br>".join(lines)
 
 @app.route('/dotesting')
 def dotesting_logs():
-    file = open("logs/dotesting.log", "r")
-    return "<br>".join(file.read().splitlines())
+    with open(DOTESTING_LOG_FILENAME, "r") as file:
+        lines = file.read().splitlines()
+    return "<br>".join(lines)
 
 
 if __name__ == "__main__":
