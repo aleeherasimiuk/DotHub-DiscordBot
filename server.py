@@ -88,7 +88,7 @@ def receive_twitch_notification_test():
 @app.route('/logs')
 def logs():
     file = open(LOG_FILENAME, "r")
-    return file.read()
+    return "<br>".join(file.read().splitlines())
 
 @app.route('/dotesting')
 def dotesting_logs():

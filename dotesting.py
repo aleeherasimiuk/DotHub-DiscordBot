@@ -58,10 +58,10 @@ async def avatar(ctx, member : discord.Member = None):
 @bot.command()
 async def scrap(ctx):
     if ctx.author.id not in bot_config['allowed_ids']:
-        logger.warn(f"{ctx.author.id} attempted to scrap messages. Not allowed")
+        logger.warn(f"{ctx.author.id} attempted to scrap messages. Not allowed.")
         return
     messages = []
-    logger.info("Scrapping started")
+    logger.info("Scraping started")
     names = ["Juan", "José", "Adrian", "Mario", "Pedro", "Jacinto", "Antonio"]
     total_count = 1
     async for message in ctx.channel.history(limit=50000, oldest_first=True):
@@ -71,7 +71,7 @@ async def scrap(ctx):
         s = re.split(r'<@!?(\d+)>', text)
         i = 0
         if (total_count % 100) == 0:
-            logger.info(f"{total_count} messages has been downloaded")
+            logger.info(f"{total_count} messages have been downloaded.")
         for mention in s:
             try:
                 mention = int(mention)
@@ -102,10 +102,10 @@ async def scrap(ctx):
 @bot.command()
 async def scrap_images(ctx):
     if ctx.author.id not in bot_config['allowed_ids']:
-        logger.warn(f"{ctx.author.id} attempted to scrap images. Not allowed")
+        logger.warn(f"{ctx.author.id} attempted to scrap images. Not allowed.")
         return
     await ctx.send("Iniciando scraping...")
-    logger.info(f"Scrapping imaged on: {ctx.channel.name}")
+    logger.info(f"Scraping images on: {ctx.channel.name}")
     messages = []
     total_count = 1
     start = datetime.datetime(year=2021, month=5, day=17, hour=21, minute=43)
@@ -114,7 +114,7 @@ async def scrap_images(ctx):
         s = re.split(r'<@!?(\d+)>', text)
         i = 0
         if (total_count % 100) == 0:
-            logger.info(f"{total_count} messages has been downloaded.")
+            logger.info(f"{total_count} messages have been downloaded.")
         if message.attachments and message.attachments[0].content_type.startswith("image"):
             if message.content:
                 text = message.content
@@ -130,12 +130,12 @@ async def scrap_images(ctx):
 @bot.command()
 async def eval(ctx, *, body: str):
     if ctx.author.id not in bot_config['allowed_ids']:
-        logger.warn(f"{ctx.author.id} attempted to eval an expression. Not allowed")
+        logger.warn(f"{ctx.author.id} attempted to eval an expression. Not allowed.")
         return
     
     if "sudo" in body:
-        logger.warn(f"{ctx.author.id} attempted to eval an expression with sudo. Not allowed")
-        ctx.send('👀')
+        logger.warn(f"{ctx.author.id} attempted to eval an expression with sudo. Not allowed.")
+        await ctx.send('👀')
         return
 
     """Evaluates a code"""
@@ -229,13 +229,13 @@ def send_info(id, notebook, title, model, i, seed, author_id):
     webhook_message.send()
 
 def send_info_not_found(id):
-    webhook_message = WebhookMessage(info_config, [], f"<@{id}>\nNo he podido obtener información acerca de esa imagen 😔")
+    webhook_message = WebhookMessage(info_config, [], f"<@{id}>\nNo he podido obtener información acerca de esa imagen. 😔")
     webhook_message.send()
 
 @bot.command()
 async def ping(ctx):
     if ctx.author.id not in bot_config['allowed_ids']:
-        logger.warn(f"{ctx.author.id} attempted to ping. Not allowed")
+        logger.warn(f"{ctx.author.id} attempted to ping. Not allowed.")
         return
     await ctx.send("Pong")
 
