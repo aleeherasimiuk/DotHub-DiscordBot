@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from ..webhook_message import WebhookMessage
 from ..config import Config
+import json
 
 
 class YoutubeNotification(WebhookMessage):
@@ -14,8 +15,9 @@ class YoutubeNotification(WebhookMessage):
         self.channel_url = channel_url
         self.title = title
         self.video_url = video_url
+        role_id = self._get_role_id()
 
-        content = "Hey @everyone! [{}](<{}>) ha subido un nuevo [vídeo]({})!".format(channel_name, channel_url, video_url)
+        content = f"¡Hey! ¡[{channel_name}](<{channel_url}>) ha subido un nuevo [vídeo]({video_url}) en <@&{role_id}>!"
         super().__init__(config, [], content=content)
 
     @classmethod
@@ -27,3 +29,8 @@ class YoutubeNotification(WebhookMessage):
         channel_name = soup.entry.author.find('name').string
 
         return YoutubeNotification(config, channel_name, channel_url, title, video_url)
+
+    def _get_role_id(self):
+        with open('res/roles.json') as f:
+            _json = json.load(f)
+        return _json['youtube_viewer']

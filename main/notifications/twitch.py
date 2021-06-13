@@ -1,6 +1,7 @@
 import requests
 from ..webhook_message import WebhookMessage
 from ..config import Config
+import json
 
 
 class TwitchNotification(WebhookMessage):
@@ -8,13 +9,12 @@ class TwitchNotification(WebhookMessage):
     user_login: str
     stream_title: str
 
-    def __init__(self, config: Config, user_name, user_login, title):
+    def __init__(self, config: Config, user_name, user_login, title, role_id):
         self.user_name = user_name
         self.user_login = user_login
         self.stream_title = title
 
-        content = "Hey @everyone! [{}](https://twitch.tv/{}) está en directo en Twitch: **{}**.\nNo te lo pierdas!".format(
-            user_name, user_login, title)
+        content = f"¡Hey! [{user_name}](https://twitch.tv/{user_login}) está en directo en <@&{role_id}>: **{title}**.\n¡No te lo pierdas!"
         super().__init__(config, [], content=content)
 
 
@@ -57,7 +57,13 @@ class TwitchNotificationBuilder:
         except requests.exceptions.HTTPError as err:
             raise Exception("There was an error retrieving info from stream")
 
+    def _get_role_id(self):
+        with open('res/roles.json') as f:
+            _json = json.load(f)
+        return _json['twitch_viewer']
+
     def build_twitch_notification(self, config: Config):
         response = self._make_request()
         self._process_request(response)
-        return TwitchNotification(config, self.user_name, self.user_login, self.stream_title)
+        role_id = self._get_role_id()
+        return TwitchNotification(config, self.user_name, self.user_login, self.stream_title, role_id)

@@ -12,7 +12,7 @@ import requests
 app = Flask(__name__)
 SERVER_LOG_FILENAME = 'logs/errores.log'
 DOTESTING_LOG_FILENAME = "logs/dotesting.log"
-app.logger.setLevel(logging.debug)
+app.logger.setLevel(logging.DEBUG)
 file_handler = logging.FileHandler(filename=SERVER_LOG_FILENAME, encoding='utf-8', mode='a')
 file_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 app.logger.addHandler(file_handler)
@@ -26,7 +26,7 @@ def receive_youtube_notification():
     app.logger.info("Received youtube notification.")
     app.logger.debug("Received youtube payload: {}".format(request.get_data()))
 
-    config = Config.from_file('res/notifications_config.json')
+    config = Config.from_file('res/mock_notifications_config.json')
     youtube_message = YoutubeNotification.from_xml(config, request.get_data())
 
     if youtube_message.title != last_sent_youtube_notification:
@@ -93,8 +93,8 @@ def receive_twitch_notification_test():
     title = data['title']
     app.logger.info("Received test twitch notification: {} - {}".format(user_name, title))
 
-    config = Config.from_file('res/notifications_config.json')
-    twitch_notification = TwitchNotification(config, user_name, user_login, title)
+    config = Config.from_file('res/mock_notifications_config.json')
+    twitch_notification = TwitchNotification(config, user_name, user_login, title, 853675528913289245)
     twitch_notification.send()
 
     return '', 204
