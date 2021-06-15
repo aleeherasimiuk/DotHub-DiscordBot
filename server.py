@@ -1,10 +1,10 @@
 from main.notifications.twitch import TwitchNotification, TwitchNotificationBuilder
 from main.notifications.youtube import YoutubeNotification
 from main.config import Config
-from flask import Flask, config
+from flask import Flask
 from flask import request
+from flask import render_template
 import xml.etree.ElementTree as ET
-from bs4 import BeautifulSoup
 import json
 import logging
 import requests
@@ -86,13 +86,13 @@ def receive_twitch_notification():
 def logs():
     with open(SERVER_LOG_FILENAME, "r") as file:
         lines = file.read().splitlines()
-    return "<br>".join(lines)
+    return render_template('logs.html', lines=lines)
 
 @app.route('/dotesting')
 def dotesting_logs():
     with open(DOTESTING_LOG_FILENAME, "r") as file:
         lines = file.read().splitlines()
-    return "<br>".join(lines)
+    return render_template('logs.html', lines=lines)
 
 
 if __name__ == "__main__":
