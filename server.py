@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import json
 import logging
 import requests
+import traceback
 
 app = Flask(__name__)
 SERVER_LOG_FILENAME = 'logs/errores.log'
@@ -64,39 +65,20 @@ def receive_twitch_notification():
         app.logger.info("Challenge for youtube subscription received: {}".format(challenge))
         return challenge
 
-    with open('res/twitch_config.json') as file:
-        _json = json.load(file)
-
-
     try:
         config = Config.from_file('res/notifications_config.json')
         twitch_notification = TwitchNotificationBuilder(**_json).build_twitch_notification(config)
-        if twitch_notification.stream_title not in last_sent_twitch_notification:
+        if twitch_notification.stream_id not in last_sent_twitch_notification:
             twitch_notification.send()
-            last_sent_twitch_notification = twitch_notification.stream_title
+            last_sent_twitch_notification = twitch_notification.stream_id
+            app.logger.info("Sending webhook message for: {}".format(twitch_notification.user_name))
+        else:
+            app.logger.info("Duplicated twitch notification")
     except Exception as e:
         app.logger.error("Can't send twitch notification: {}".format(e))
+        traceback.print_exc()
 
-    app.logger.info(
-        "Sending webhook message for: {} - {}".format(twitch_notification.user_name, twitch_notification.stream_title))
-
-    return '', 204
-
-
-@app.route('/twitch_stream_test', methods=['POST'])
-def receive_twitch_notification_test():
-    _json = json.loads(request.get_data())
-
-    data = _json['data'][0]
-    user_name = data['user_name']
-    user_login = data['user_login']
-    title = data['title']
-    app.logger.info("Received test twitch notification: {} - {}".format(user_name, title))
-
-    config = Config.from_file('res/mock_notifications_config.json')
-    twitch_notification = TwitchNotification(config, user_name, user_login, title, 853675528913289245)
-    twitch_notification.send()
-
+    
     return '', 204
 
 
