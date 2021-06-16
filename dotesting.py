@@ -1,5 +1,7 @@
 from discord import webhook
 from main.config import Config
+from main.metadata.stegano import get_metadata_from_steno
+from main.metadata.xmp import get_metadata_from_xmp
 import discord
 import asyncio
 from discord.ext import commands
@@ -14,7 +16,7 @@ from stegano import lsb
 
 from main.webhook_message import WebhookMessage
 from main.embed.info import Info
-import xmltodict, json
+import json
 import aiohttp
 import logging
 
@@ -39,7 +41,7 @@ logger.addHandler(file_handler)
 
 
 bot_config = None
-with open("res/dotesting.json") as file:
+with open("res/dotesting.mock.json") as file:
     bot_config = json.load(file)
 
 info_config = Config.from_json(bot_config['info'])
@@ -174,54 +176,33 @@ async def eval(ctx, *, body: str):
         else:
             await ctx.send(f'```py\n{value}\n```')
 
-def get_metadata_from_xmp(stream):
-    xmp_start = stream.find(b'<x:xmpmeta')
-    xmp_end   = stream.find(b'</x:xmpmeta')
-    xmp_str   = stream[xmp_start:xmp_end+12]
-    if not xmp_str:
-        return None
-    metadata = xmltodict.parse(xmp_str)
-    meta     = metadata["x:xmpmeta"]["rdf:RDF"]["rdf:Description"]
-    notebook = meta["dc:creator"]["rdf:Seq"]["rdf:li"]
-    title    = meta["dc:title"]["rdf:Seq"]["rdf:li"]
-    model    = meta["dc:model"]["rdf:Seq"]["rdf:li"]
-    i        = meta["dc:i"]["rdf:Seq"]["rdf:li"]
-    seed     = meta["dc:seed"]["rdf:Seq"]["rdf:li"]
 
-    return {"notebook": notebook, "title": title, "model": model, "i": i, "seed": seed }
-
-def get_metadata_from_steno(stream):
-    data = lsb.reveal(io.BytesIO(stream))
-    as_dict = json.loads(data)
-    if "notebook" not in as_dict:
-        as_dict.update(notebook="VQGAN+CLIP")
-    if "creator" in as_dict:
-        del as_dict["creator"]
-    return as_dict
 
 @bot.event
 async def on_message(message):
     if message.content.lower() == "info" and message.reference:
-        msg = await message.channel.fetch_message(message.reference.message_id)
-        if not msg.attachments or not msg.attachments[0].content_type.startswith("image"):
-            pass
-        else:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(msg.attachments[0].url) as resp:
-                    stream = await resp.read()
-            metadata = get_metadata_from_xmp(stream)
-            if not metadata:
-                try:
-                    metadata = get_metadata_from_steno(stream)
-                except:
-                    metadata = None
-            if not metadata:
-                send_info_not_found(message.author.id)
-                return
-            metadata.update(id=message.author.id, author_id=msg.author.id)
-            send_info(**metadata)
+        await extract_metadata(message)
     await bot.process_commands(message)
 
+
+async def extract_metadata(message):
+    msg = await message.channel.fetch_message(message.reference.message_id)
+    if not msg.attachments or not msg.attachments[0].content_type.startswith("image"):
+        return
+    
+    async with aiohttp.ClientSession() as session:
+        async with session.get(msg.attachments[0].url) as resp:
+            stream = await resp.read()
+    metadata = get_metadata_from_xmp(stream)
+    
+    if not metadata:
+        metadata = get_metadata_from_steno(stream)
+        
+    if not metadata:
+        send_info_not_found(message.author.id)
+        return
+    metadata.update(id=message.author.id, author_id=msg.author.id)
+    send_info(**metadata)
    
 def send_info(id, notebook, title, model, i, seed, author_id):
     info = Info(notebook, title, model, i, seed, author_id)
