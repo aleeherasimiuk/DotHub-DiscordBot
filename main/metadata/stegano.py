@@ -38,8 +38,8 @@ def get_metadata_from_steno(stream):
     if not data:
         return None
     as_dict = json.loads(data)
-    if "notebook" not in as_dict:
-        as_dict.update(notebook="VQGAN+CLIP")
+    if "notebook" in as_dict:
+        del as_dict["notebook"]
     if "creator" in as_dict:
         del as_dict["creator"]
     return as_dict

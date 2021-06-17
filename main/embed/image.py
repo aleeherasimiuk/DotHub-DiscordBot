@@ -7,7 +7,7 @@ class Image:
 
     def _validate_image_url(self, image_url):
         extensions = ['.png', '.jpg', '.jpeg']
-        if image_url and not any([extension in image_url for extension in extensions]):
+        if image_url and not any([extension in image_url.lower() for extension in extensions]):
             raise Exception("The image url does not appear to be an image. Please try again. [{}]".format(image_url))
 
     def to_dict(self):

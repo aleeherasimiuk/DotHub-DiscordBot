@@ -201,11 +201,13 @@ async def extract_metadata(message):
     if not metadata:
         send_info_not_found(message.author.id)
         return
-    metadata.update(id=message.author.id, author_id=msg.author.id)
+
+    size = f"{msg.attachments[0].width} x {msg.attachments[0].height}"
+    metadata.update(id=message.author.id, author_id=msg.author.id, thumbnail_url=msg.attachments[0].url, size=size)
     send_info(**metadata)
    
-def send_info(id, notebook, title, model, i, seed, author_id):
-    info = Info(notebook, title, model, i, seed, author_id)
+def send_info(id, **kwargs):
+    info = Info(**kwargs)
     webhook_message = WebhookMessage(info_config, [info], content=f"<@{id}>")
     webhook_message.send()
 
