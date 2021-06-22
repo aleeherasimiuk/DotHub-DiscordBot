@@ -82,4 +82,9 @@ async def ping(ctx):
         return
     await ctx.send("Pong")
 
+@bot.event
+async def on_ready():
+    logger.info(f"Bot started as {bot.user.name} [{bot.user.id}]")
+    await bot.change_presence(activity = discord.Game(name = "VQGAN + CLIP"))
+
 bot.run(bot_config['token'])
