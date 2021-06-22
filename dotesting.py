@@ -27,12 +27,8 @@ LOG_FILE = "logs/dotesting.log"
 
 logger = setup_logger(logging.getLogger('discord'), LOG_FILE, logging.INFO)
 
-
-bot_config = None
 with open("res/dotesting.mock.json") as file:
     bot_config = json.load(file)
-
-info_config = Config.from_json(bot_config['info'])
 
 @bot.event
 async def on_ready():
