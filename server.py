@@ -1,22 +1,21 @@
-from main.notifications.twitch import TwitchNotification, TwitchNotificationBuilder
+from main.notifications.twitch import TwitchNotificationBuilder
 from main.notifications.youtube import YoutubeNotification
 from main.config import Config
+from main.logger import setup_logger
 from flask import Flask
 from flask import request
 from flask import render_template
-import xml.etree.ElementTree as ET
 import json
 import logging
-import requests
 import traceback
 
 app = Flask(__name__)
 SERVER_LOG_FILENAME = 'logs/errores.log'
 DOTESTING_LOG_FILENAME = "logs/dotesting.log"
-app.logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler(filename=SERVER_LOG_FILENAME, encoding='utf-8', mode='a')
-file_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-app.logger.addHandler(file_handler)
+INFOBOT_LOG_FILENAME = "logs/infobot.log"
+
+logger = setup_logger(app.logger, SERVER_LOG_FILENAME, logging.INFO)
+
 last_sent_youtube_notification = ""
 last_sent_twitch_notification = ""
 
@@ -24,14 +23,14 @@ last_sent_twitch_notification = ""
 @app.route('/youtube_video', methods=['POST'])
 def receive_youtube_notification():
     global last_sent_youtube_notification
-    app.logger.info("Received youtube notification.")
-    app.logger.debug("Received youtube payload: {}".format(request.get_data()))
+    logger.info("Received youtube notification.")
+    logger.debug("Received youtube payload: {}".format(request.get_data()))
 
     config = Config.from_file('res/mock_notifications_config.json')
     youtube_message = YoutubeNotification.from_xml(config, request.get_data())
 
     if youtube_message.title != last_sent_youtube_notification:
-        app.logger.info("Sending webhook message for: {} - {}".format(youtube_message.channel_name, youtube_message.title))
+        logger.info("Sending webhook message for: {} - {}".format(youtube_message.channel_name, youtube_message.title))
         youtube_message.send()
         last_sent_youtube_notification = youtube_message.title
     
@@ -41,7 +40,7 @@ def receive_youtube_notification():
 @app.route('/youtube_video', methods=['GET'])
 def challenge():
     challenge = request.args.get('hub.challenge')
-    app.logger.info("Challenge for youtube subscription received: {}".format(challenge))
+    logger.info("Challenge for youtube subscription received: {}".format(challenge))
 
     if challenge:
         return challenge
@@ -58,11 +57,11 @@ def hello():
 def receive_twitch_notification():
     global last_sent_twitch_notification
     _json = json.loads(request.get_data())
-    app.logger.debug("Received twitch payload: {}".format(request.get_data()))
+    logger.debug("Received twitch payload: {}".format(request.get_data()))
 
     if 'challenge' in _json.keys():
         challenge = _json['challenge']
-        app.logger.info("Challenge for youtube subscription received: {}".format(challenge))
+        logger.info("Challenge for youtube subscription received: {}".format(challenge))
         return challenge
 
     try:
@@ -71,11 +70,11 @@ def receive_twitch_notification():
         if twitch_notification.stream_id not in last_sent_twitch_notification:
             twitch_notification.send()
             last_sent_twitch_notification = twitch_notification.stream_id
-            app.logger.info("Sending webhook message for: {}".format(twitch_notification.user_name))
+            logger.info("Sending webhook message for: {}".format(twitch_notification.user_name))
         else:
-            app.logger.info("Duplicated twitch notification")
+            logger.info("Duplicated twitch notification")
     except Exception as e:
-        app.logger.error("Can't send twitch notification: {}".format(e))
+        logger.error("Can't send twitch notification: {}".format(e))
         traceback.print_exc()
 
     
@@ -84,13 +83,18 @@ def receive_twitch_notification():
 
 @app.route('/logs')
 def logs():
-    with open(SERVER_LOG_FILENAME, "r") as file:
-        lines = file.read().splitlines()
-    return render_template('logs.html', lines=lines)
+    return show_logs(SERVER_LOG_FILENAME)
 
 @app.route('/dotesting')
 def dotesting_logs():
-    with open(DOTESTING_LOG_FILENAME, "r") as file:
+    return show_logs(DOTESTING_LOG_FILENAME)
+
+@app.route('/infobot')
+def infobot_logs():
+    return show_logs(INFOBOT_LOG_FILENAME)
+
+def show_logs(filename):
+    with open(filename, "r") as file:
         lines = file.read().splitlines()
     return render_template('logs.html', lines=lines)
 

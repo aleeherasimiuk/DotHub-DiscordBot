@@ -1,3 +1,4 @@
+import discord
 from typing import List
 from .author import Author
 from .image import Image, Thumbnail
@@ -65,6 +66,10 @@ class Embed:
                 dictionary['fields'].append(field.to_dict())
 
         return dictionary
+
+    def discord_embed(self):
+        return discord.Embed.from_dict(self.to_dict())
+
 
     def _addValueIfExists(self, dictionary, value):
         if value:

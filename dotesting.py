@@ -1,23 +1,15 @@
-from discord import webhook
 from main.config import Config
-from main.metadata.stegano import get_metadata_from_steno
-from main.metadata.xmp import get_metadata_from_xmp
+from main.logger import setup_logger
 import discord
-import asyncio
 from discord.ext import commands
 import io, re, json
 import textwrap
 import traceback
-import contextlib
 import random
 from contextlib import *
 import datetime
-from stegano import lsb
 
-from main.webhook_message import WebhookMessage
-from main.embed.info import Info
 import json
-import aiohttp
 import logging
 
 description = 'N/A'
@@ -31,13 +23,9 @@ intents.presences = True
 bot = commands.Bot(command_prefix="$", description=description, intents=intents)
 bot.remove_command('help')
 
-logger = logging.getLogger('discord')
-logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(
-    filename='logs/dotesting.log', encoding='utf-8', mode='a')
-file_handler.setFormatter(logging.Formatter(
-    '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(file_handler)
+LOG_FILE = "logs/dotesting.log"
+
+logger = setup_logger(logging.getLogger('discord'), LOG_FILE, logging.INFO)
 
 
 bot_config = None
@@ -180,40 +168,8 @@ async def eval(ctx, *, body: str):
 
 @bot.event
 async def on_message(message):
-    if message.content.lower() == "info" and message.reference:
-        await extract_metadata(message)
     await bot.process_commands(message)
 
-
-async def extract_metadata(message):
-    msg = await message.channel.fetch_message(message.reference.message_id)
-    if not msg.attachments or not msg.attachments[0].content_type.startswith("image"):
-        return
-    
-    async with aiohttp.ClientSession() as session:
-        async with session.get(msg.attachments[0].url) as resp:
-            stream = await resp.read()
-    metadata = get_metadata_from_xmp(stream)
-    
-    if not metadata:
-        metadata = get_metadata_from_steno(stream)
-        
-    if not metadata:
-        send_info_not_found(message.author.id)
-        return
-
-    size = f"{msg.attachments[0].width} x {msg.attachments[0].height}"
-    metadata.update(id=message.author.id, author_id=msg.author.id, thumbnail_url=msg.attachments[0].url, size=size)
-    send_info(**metadata)
-   
-def send_info(id, **kwargs):
-    info = Info(**kwargs)
-    webhook_message = WebhookMessage(info_config, [info], content=f"<@{id}>")
-    webhook_message.send()
-
-def send_info_not_found(id):
-    webhook_message = WebhookMessage(info_config, [], f"<@{id}>\nNo he podido obtener información acerca de esa imagen. 😔")
-    webhook_message.send()
 
 @bot.command()
 async def ping(ctx):
