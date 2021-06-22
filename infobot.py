@@ -51,13 +51,13 @@ async def extract_metadata(message):
         metadata = get_metadata_from_steno(stream)
 
     if not metadata:
-        await send_message(message, reference, discord.Embed(description = NOT_FOUND_MESSAGE, color = 16122))
+        await send_message(message, discord.Embed(description = NOT_FOUND_MESSAGE, color = 16122))
         return
 
     size = get_size(reference)
     metadata.update(author_id = reference.author.id, thumbnail_url = reference.attachments[0].url, size = size)
     info = Info(**metadata)
-    await send_message(message, reference, info.discord_embed())
+    await send_message(message, info.discord_embed())
 
 
 async def get_stream(reference):
@@ -71,8 +71,8 @@ def get_size(reference):
     return f"{reference.attachments[0].width} x {reference.attachments[0].height}"
 
 
-async def send_message(message, reference, payload):
-    await message.channel.send(embed = payload, reference=reference, mention_author=False)
+async def send_message(message, payload):
+    await message.channel.send(embed = payload, reference = message, mention_author=False)
 
 
 @bot.command()
