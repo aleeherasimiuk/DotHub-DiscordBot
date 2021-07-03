@@ -13,6 +13,9 @@ class Info(Embed):
         if thumbnail_url:
             thumbnail = Thumbnail(thumbnail_url)
 
+        if not title:
+            title = "No input"
+            
         fields = [
             Field("Título(s)", title, inline = False),
             Field("Autor", f"<@{author_id}>", inline = True),
