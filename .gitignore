@@ -10,3 +10,4 @@ __pycache__/
 *.log
 
 !dotesting.sample.json
+src/res/moderadot.json
