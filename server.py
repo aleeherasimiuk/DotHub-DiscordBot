@@ -13,6 +13,7 @@ app = Flask(__name__)
 SERVER_LOG_FILENAME = 'logs/errores.log'
 DOTESTING_LOG_FILENAME = "logs/dotesting.log"
 INFOBOT_LOG_FILENAME = "logs/infobot.log"
+MODERADOT_LOG_FILENAME = "logs/moderadot.log"
 
 logger = setup_logger(app.logger, SERVER_LOG_FILENAME, logging.INFO)
 
@@ -92,6 +93,10 @@ def dotesting_logs():
 @app.route('/infobot')
 def infobot_logs():
     return show_logs(INFOBOT_LOG_FILENAME)
+
+@app.route('/moderadot')
+def infobot_logs():
+    return show_logs(MODERADOT_LOG_FILENAME)
 
 def show_logs(filename):
     with open(filename, "r") as file:
