@@ -25,7 +25,7 @@ async def on_message(message):
     global message_content, last_message, spam_counter
     message_content = f"{message.author.id}: {message.content}"
     message_content = message_content.replace("'", "<c>")
-    if message_content == last_message and message_content != "":
+    if message_content == last_message and message.content != "":
         spam_counter += 1
         await message.delete()
         logger.warning(f"User Spam: {message_content}")
