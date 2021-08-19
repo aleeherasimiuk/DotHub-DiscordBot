@@ -27,13 +27,13 @@ def receive_youtube_notification():
     logger.info("Received youtube notification.")
     logger.debug("Received youtube payload: {}".format(request.get_data()))
 
-    config = Config.from_file('res/mock_notifications_config.json')
+    config = Config.from_file('res/notifications_config.json')
     youtube_message = YoutubeNotification.from_xml(config, request.get_data())
 
-    if youtube_message.title != last_sent_youtube_notification:
+    if youtube_message.id != last_sent_youtube_notification:
         logger.info("Sending webhook message for: {} - {}".format(youtube_message.channel_name, youtube_message.title))
         youtube_message.send()
-        last_sent_youtube_notification = youtube_message.title
+        last_sent_youtube_notification = youtube_message.id
     
     return "", 204
 

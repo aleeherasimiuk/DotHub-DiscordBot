@@ -22,6 +22,9 @@ class YoutubeNotificationTest(unittest.TestCase):
   def test_channel_url(self):
     self.assertEqual(self.youtube_notification.channel_url, "https://www.youtube.com/channel_name")
 
+  def test_channel_id(self):
+    self.assertEqual(self.youtube_notification.id, "123456789")
+
   xml = """<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015"
          xmlns="http://www.w3.org/2005/Atom">
   <link rel="hub" href="https://pubsubhubbub.appspot.com"/>
@@ -29,7 +32,7 @@ class YoutubeNotificationTest(unittest.TestCase):
   <title>YouTube video feed</title>
   <updated>2015-04-01T19:05:24.552394234+00:00</updated>
   <entry>
-    <id>1234567489</id>
+    <id>123456789</id>
     <yt:videoId>123456789</yt:videoId>
     <yt:channelId>this_is_the_channel_id</yt:channelId>
     <title>This is the video title!</title>

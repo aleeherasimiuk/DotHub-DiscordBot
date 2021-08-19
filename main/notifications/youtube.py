@@ -5,16 +5,18 @@ import json
 
 
 class YoutubeNotification(WebhookMessage):
+    id: str
     channel_name: str
     channel_url: str
     title: str
     video_url: str
 
-    def __init__(self, config: Config, channel_name, channel_url, title, video_url):
+    def __init__(self, config: Config, channel_name, channel_url, title, video_url, id):
         self.channel_name = channel_name
         self.channel_url = channel_url
         self.title = title
         self.video_url = video_url
+        self.id = id
         role_id = self._get_role_id()
 
         content = f"¡Hey! ¡[{channel_name}](<{channel_url}>) ha subido un nuevo [vídeo]({video_url}) en <@&{role_id}>!"
@@ -28,7 +30,9 @@ class YoutubeNotification(WebhookMessage):
         channel_url = soup.entry.author.uri.string
         channel_name = soup.entry.author.find('name').string
 
-        return YoutubeNotification(config, channel_name, channel_url, title, video_url)
+        entry = soup.entry.id.string
+
+        return YoutubeNotification(config, channel_name, channel_url, title, video_url, entry)
 
     def _get_role_id(self):
         with open('res/roles.json') as f:
