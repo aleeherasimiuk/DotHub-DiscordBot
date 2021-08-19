@@ -25,14 +25,14 @@ async def on_message(message):
     global message_content, last_message, spam_counter
     message_content = f"{message.author.id}: {message.content}"
     message_content = message_content.replace("'", "<c>")
-    if message_content == last_message:
+    if message_content == last_message and message.content != "":
         spam_counter += 1
         await message.delete()
         logger.warning(f"User Spam: {message_content}")
     else:
         last_message = message_content
         spam_counter = 0
-    if spam_counter > 1:
+    if spam_counter > 2:
         user = message.author
         muted = discord.utils.get(user.guild.roles, name="muted")
         verified = discord.utils.get(user.guild.roles, name="Member")
