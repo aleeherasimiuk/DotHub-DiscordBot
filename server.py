@@ -17,7 +17,7 @@ MODERADOT_LOG_FILENAME = "logs/moderadot.log"
 
 logger = setup_logger(app.logger, SERVER_LOG_FILENAME, logging.INFO)
 
-last_sent_youtube_notification = ""
+last_sent_youtube_notification = []
 last_sent_twitch_notification = ""
 
 
@@ -30,10 +30,10 @@ def receive_youtube_notification():
     config = Config.from_file('res/notifications_config.json')
     youtube_message = YoutubeNotification.from_xml(config, request.get_data())
 
-    if youtube_message.id != last_sent_youtube_notification:
+    if youtube_message.id not in last_sent_youtube_notification:
         logger.info("Sending webhook message for: {} - {}".format(youtube_message.channel_name, youtube_message.title))
         youtube_message.send()
-        last_sent_youtube_notification = youtube_message.id
+        last_sent_youtube_notification.append(youtube_message.id)
     
     return "", 204
 
@@ -41,7 +41,7 @@ def receive_youtube_notification():
 @app.route('/youtube_video', methods=['GET'])
 def challenge():
     challenge = request.args.get('hub.challenge')
-    logger.info("Challenge for youtube subscription received: {}".format(challenge))
+    #logger.info("Challenge for youtube subscription received: {}".format(challenge))
 
     if challenge:
         return challenge
