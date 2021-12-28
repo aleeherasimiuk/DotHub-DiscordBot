@@ -3,31 +3,36 @@ version: '3.1'
 services:
 
   gpt:
-    build: 
+    build:
+      context: .
       dockerfile: gpt.dockerfile
     volumes:
       - ./logs:/usr/src/app/logs
   
   dotesting:
     build:
+      context: .
       dockerfile: dotesting.dockerfile
     volumes:
       - ./logs:/usr/src/app/logs
 
   moderadot:
     build:
+      context: .
       dockerfile: moderadot.dockerfile
     volumes:
       - ./logs:/usr/src/app/logs
   
   infobot:
     build:
+      context: .
       dockerfile: infobot.dockerfile
     volumes:
       - ./logs:/usr/src/app/logs
 
   server:
     build:
+      context: .
       dockerfile: server.dockerfile
     volumes:
       - ./logs:/var/www/application/logs

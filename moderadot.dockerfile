@@ -1,10 +1,6 @@
-FROM python:slim-buster
+FROM swaxtech/pycord2:v1
 
 WORKDIR /usr/src/app
-
-RUN apt update && apt install -y git
-RUN git clone https://github.com/Pycord-Development/pycord /tmp/pycord
-RUN python -m pip install /tmp/pycord
 
 COPY ./moderadot.py .
 COPY ./models/logger.py ./models/logger.py
