@@ -1,12 +1,12 @@
 import discord
-import logging
 import json
 import aiohttp
+import os
 from discord.ext import commands
-from main.metadata.stegano import get_metadata_from_steno
-from main.metadata.xmp import get_metadata_from_xmp
-from main.embed.info import Info
-from main.logger import setup_logger
+from models.metadata.stegano import get_metadata_from_steno
+from models.metadata.xmp import get_metadata_from_xmp
+from models.embed.info import Info
+from models.logger import setup_discord_logger as setup_logger
 
 description = 'N/A'
 intents = discord.Intents.default()
@@ -20,10 +20,9 @@ bot = commands.Bot(command_prefix = "&", description = description, intents = in
 bot.remove_command('help')
 
 CONFIG_FILE = "res/infobot.json"
-LOG_FILE = "logs/infobot.log"
 NOT_FOUND_MESSAGE = "No he podido obtener información acerca de esa imagen. 😔"
 
-logger = setup_logger(logging.getLogger('discord'), LOG_FILE, logging.INFO)
+logger = setup_logger("logs/infobot.log")
 
 bot_config = None
 with open(CONFIG_FILE) as file:
@@ -87,4 +86,4 @@ async def on_ready():
     logger.info(f"Bot started as {bot.user.name} [{bot.user.id}]")
     await bot.change_presence(activity = discord.Game(name = "VQGAN + CLIP"))
 
-bot.run(bot_config['token'])
+bot.run(os.environ['TOKEN'])

@@ -1,6 +1,6 @@
-from main.embed.image import Thumbnail
-from main.embed.embed import Embed
-from main.resource_item import ResourceItem
+from models.embed.image import Thumbnail
+from models.embed.embed import Embed
+from models.resource_item import ResourceItem
 from typing import List
 
 

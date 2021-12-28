@@ -1,5 +1,5 @@
-from main.config import Config
-from main.logger import setup_logger
+
+from models.logger import setup_discord_logger as setup_logger
 import discord
 from discord.ext import commands
 import io, re, json
@@ -8,6 +8,7 @@ import traceback
 import random
 from contextlib import *
 import datetime
+import os
 
 import json
 import logging
@@ -23,11 +24,9 @@ intents.presences = True
 bot = commands.Bot(command_prefix="$", description=description, intents=intents)
 bot.remove_command('help')
 
-LOG_FILE = "logs/dotesting.log"
+logger = setup_logger("logs/dotesting.log")
 
-logger = setup_logger(logging.getLogger('discord'), LOG_FILE, logging.INFO)
-
-with open("res/dotesting.mock.json") as file:
+with open("res/dotesting.json") as file:
     bot_config = json.load(file)
 
 @bot.event
@@ -174,4 +173,4 @@ async def ping(ctx):
         return
     await ctx.send("Pong")
 
-bot.run(bot_config['token'])
+bot.run(os.environ['TOKEN'])

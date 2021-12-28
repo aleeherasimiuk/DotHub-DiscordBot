@@ -1,4 +1,4 @@
-from main.embed.image import Image
+from models.embed.image import Image
 import unittest
 
 

@@ -1,6 +1,6 @@
-from main.config import Config
+from models.config import Config
 import unittest
-from main.artwork import Artwork
+from models.artwork import Artwork
 
 class TestArtwork(unittest.TestCase):
   artwork : Artwork

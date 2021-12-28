@@ -1,14 +1,13 @@
 import discord
 from discord.ext import commands
-from main.embed.ban import Ban
+from models.embed.ban import Ban
 import json
-from main.logger import setup_logger
-import logging
+from models.logger import setup_discord_logger as setup_logger
+import os
 
 CONFIG_FILE = "res/moderadot.json"
-LOG_FILE = "logs/moderadot.log"
 
-logger = setup_logger(logging.getLogger('discord'), LOG_FILE, logging.INFO)
+logger = setup_logger("logs/moderadot.log")
 
 bot_config = None
 with open(CONFIG_FILE) as file:
@@ -49,5 +48,12 @@ async def on_ready():
     logger.info(f"Bot started as {bot.user.name} [{bot.user.id}]")
     await bot.change_presence(activity = discord.Game(name = "Observando el ServiDot"))
 
+@bot.command()
+async def ping(ctx):
+    if ctx.author.id not in bot_config['allowed_ids']:
+        logger.warn(f"{ctx.author.id} attempted to ping. Not allowed.")
+        return
+    await ctx.send("Pong")
 
-bot.run(bot_config['token'])
+
+bot.run(os.environ['TOKEN'])

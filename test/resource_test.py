@@ -1,5 +1,5 @@
-from main.resource_item import ResourceItem
-from main.resource import Resource
+from models.resource_item import ResourceItem
+from models.resource import Resource
 import unittest
 
 

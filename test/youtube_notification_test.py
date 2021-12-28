@@ -1,5 +1,5 @@
-from main.config import Config
-from main.notifications.youtube import YoutubeNotification
+from models.config import Config
+from models.notifications.youtube import YoutubeNotification
 import unittest
 
 class YoutubeNotificationTest(unittest.TestCase):

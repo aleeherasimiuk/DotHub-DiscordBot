@@ -1,4 +1,4 @@
-from main.embed.footer import Footer
+from models.embed.footer import Footer
 import unittest
 
 

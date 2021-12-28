@@ -1,7 +1,7 @@
-from main.notifications.twitch import TwitchNotificationBuilder
-from main.notifications.youtube import YoutubeNotification
-from main.config import Config
-from main.logger import setup_logger
+from models.notifications.twitch import TwitchNotificationBuilder
+from models.notifications.youtube import YoutubeNotification
+from models.config import Config
+from models.logger import setup_logger
 from flask import Flask
 from flask import request
 from flask import render_template
@@ -95,7 +95,7 @@ def infobot_logs():
     return show_logs(INFOBOT_LOG_FILENAME)
 
 @app.route('/moderadot')
-def infobot_logs():
+def moderadot_logs():
     return show_logs(MODERADOT_LOG_FILENAME)
 
 def show_logs(filename):

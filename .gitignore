@@ -11,3 +11,5 @@ __pycache__/
 
 !dotesting.sample.json
 src/res/moderadot.json
+docker-compose.override.yml
+nginx.conf

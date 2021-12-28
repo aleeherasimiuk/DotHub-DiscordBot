@@ -1,6 +1,6 @@
-from main.embed.footer import Footer
-from main.embed.author import Author
-from main.embed.image import Image
+from models.embed.footer import Footer
+from models.embed.author import Author
+from models.embed.image import Image
 from .embed.embed import Embed
 from datetime import datetime
 
@@ -35,3 +35,7 @@ class Artwork(Embed):
     @classmethod
     def from_discord_message(cls, message):
         return Artwork(message.content, message.jump_url, message.attachments[0].url, message.author.display_name)
+
+    @classmethod
+    def from_scrapped(cls, title, description, image_url, author):
+        return Embed(title, "", description, Image(image_url), Author(author), '5570309', None, None)

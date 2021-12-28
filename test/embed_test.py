@@ -1,4 +1,4 @@
-from main.embed.embed import Embed
+from models.embed.embed import Embed
 import unittest
 import json
 

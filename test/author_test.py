@@ -1,4 +1,4 @@
-from main.embed.author import Author
+from models.embed.author import Author
 import unittest
 
 

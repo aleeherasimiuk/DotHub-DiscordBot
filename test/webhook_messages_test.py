@@ -1,6 +1,6 @@
-from main.webhook_message import WebhookMessage
-from main.artwork import Artwork
-from main.config import Config
+from models.webhook_message import WebhookMessage
+from models.artwork import Artwork
+from models.config import Config
 import unittest
 
 

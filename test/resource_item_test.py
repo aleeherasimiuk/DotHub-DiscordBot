@@ -1,5 +1,5 @@
 import unittest
-from main.resource_item import ResourceItem
+from models.resource_item import ResourceItem
 
 
 class ResourceItemTest(unittest.TestCase):

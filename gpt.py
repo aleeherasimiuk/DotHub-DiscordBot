@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 import aiohttp
+import os
+from models.logger import setup_discord_logger as setup_logger
 
 #bot = .Bot()
 intents = discord.Intents.default()
@@ -11,12 +13,17 @@ intents.messages = True
 intents.reactions = True
 intents.presences = True
 
+logger = setup_logger("logs/gpt.log")
 
 bot = commands.Bot(command_prefix='=', intents=intents)
 bot.remove_command('help')
 
 db = {}
 english_db = {}
+
+@bot.event
+async def on_ready():
+    logger.info(f"Bot started as {bot.user.name} [{bot.user.id}]")
 
 @bot.slash_command(name = "gpt", description = "Envíale un mensaje en español a GPT-j")
 async def gpt(ctx, prompt: str):
@@ -104,4 +111,4 @@ def update_db(ctx, prompt, response, db):
         })
 
 
-bot.run("")
+bot.run(os.environ['TOKEN'])

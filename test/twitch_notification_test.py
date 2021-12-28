@@ -1,8 +1,8 @@
 from unittest import mock
 
 import json
-from main.config import Config
-from main.notifications.twitch import TwitchNotification, TwitchNotificationBuilder
+from models.config import Config
+from models.notifications.twitch import TwitchNotification, TwitchNotificationBuilder
 import unittest
 from unittest.mock import Mock, MagicMock
 

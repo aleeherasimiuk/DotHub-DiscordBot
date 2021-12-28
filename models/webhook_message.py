@@ -1,5 +1,5 @@
 import requests
-from main.config import Config
+from models.config import Config
 
 
 class WebhookMessage:

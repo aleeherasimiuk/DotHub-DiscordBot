@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+
+  gpt:
+    build: 
+      dockerfile: gpt.dockerfile
+    volumes:
+      - ./logs:/usr/src/app/logs
+  
+  dotesting:
+    build:
+      dockerfile: dotesting.dockerfile
+    volumes:
+      - ./logs:/usr/src/app/logs
+
+  moderadot:
+    build:
+      dockerfile: moderadot.dockerfile
+    volumes:
+      - ./logs:/usr/src/app/logs
+  
+  infobot:
+    build:
+      dockerfile: infobot.dockerfile
+    volumes:
+      - ./logs:/usr/src/app/logs
+
+  server:
+    build:
+      dockerfile: server.dockerfile
+    volumes:
+      - ./logs:/var/www/application/logs
+    ports:
+      - 5000:5000
+
+  
+
+
+  
