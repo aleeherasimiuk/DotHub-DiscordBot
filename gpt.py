@@ -28,6 +28,7 @@ async def on_ready():
 @bot.slash_command(name = "gpt", description = "Envíale un mensaje en español a GPT-j")
 async def gpt(ctx, prompt: str):
     global db
+    await ctx.defer()
     base_prompt = "¡Buen Día!. Me llamo GPT-j y soy un bot que pertenece al Servidor de Discord de DotCSV. Puede hacerme la pregunta que quieras, o simplemente puedes charlar conmigo"
     await generate_with_base_prompt(ctx, base_prompt, prompt, db)
 
@@ -35,20 +36,20 @@ async def gpt(ctx, prompt: str):
 @bot.slash_command(name = "english-gpt", description = "Envíale un mensaje en inglés a GPT-j")
 async def gpt_ingles(ctx, prompt: str):
     global english_db
+    await ctx.defer()
     base_prompt = "¡Hello there!. My name is GPT-j and I am a bot that works on DotCSV's Discord Server."
     await generate_with_base_prompt(ctx, base_prompt, prompt, english_db)
     
 
 async def generate_with_base_prompt(ctx, base_prompt, prompt, db):
 
-    await ctx.defer()
     new_prompt = make_prompt(ctx, base_prompt, prompt, db)
     payload = make_payload(new_prompt)
     response = await generate(ctx, payload)
 
     update_db(ctx, prompt, response, db)
 
-    await ctx.respond(f"**Input:**\n```{prompt}```\n**Output:**\n```{response}```")
+    await ctx.send_followup(f"**Input:**\n```{prompt}```\n**Output:**\n```{response}```")
 
 
 @bot.slash_command(name = "clear-input", description = "Limpia el input a GPT-j")
@@ -58,7 +59,7 @@ async def clean_input(ctx):
     await ctx.defer()
     db.pop(ctx.author.id, None)
     english_db.pop(ctx.author.id, None)
-    await ctx.respond(f"El input de {ctx.author.display_name} fue eliminado")
+    await ctx.send_followup(f"El input de {ctx.author.display_name} fue eliminado")
 
 
 
