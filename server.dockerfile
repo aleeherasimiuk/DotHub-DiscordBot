@@ -19,6 +19,7 @@ COPY ./models/webhook_message.py ./models/webhook_message.py
 COPY ./templates/ ./templates/
 COPY ./res/roles.json ./res/roles.json
 COPY ./res/twitch_config.json ./res/twitch_config.json
+COPY ./res/notifications_config.json ./res/notifications_config.json
 CMD ["gunicorn","--bind", "0.0.0.0:5000", "--workers", "1", "wsgi:app"]
 
 
