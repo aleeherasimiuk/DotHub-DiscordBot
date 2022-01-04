@@ -1,5 +1,7 @@
 import json
+import re
 
+WEBHOOK_PATTERN = "(?P<scheme>https?):\/\/(?P<domain>(?:ptb\.|canary\.)?discord(?:app)?\.com)\/api(?:\/)?(?P<api_version>v\d{1,2})?\/webhooks\/(?P<webhook_identifier>\d{17,21})\/(?P<webhook_token>[\w-]{68})"
 
 class Config:
     webhook_url: str
@@ -43,5 +45,5 @@ class Config:
         return error.args[0].split("'")[1]
 
     def _validate_webhook_url(self, webhook_url):
-        if not webhook_url.startswith("https://discord.com/api/webhooks"):
+        if not re.match(WEBHOOK_PATTERN, webhook_url):
             raise Exception("The webhook_url is not valid.")
