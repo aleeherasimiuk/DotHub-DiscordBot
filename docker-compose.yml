@@ -39,6 +39,14 @@ services:
     ports:
       - 5000:5000
 
+  museum:
+    build:
+      context: .
+      dockerfile: museum.dockerfile
+    volumes:
+      - ./logs:/usr/src/app/logs
+      - ./museum.py:/usr/src/app/museum.py
+
   
 
 
