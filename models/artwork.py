@@ -12,12 +12,12 @@ class Artwork(Embed):
     title: str
 
     def __init__(self, title, original_message, image_url, author, date=datetime.now(), uploaded=False):
-        description = "Hecho con **VQGAN + CLIP**\n[Ver mensaje original]({})".format(original_message)
+        description = "[Ver mensaje original]({})".format(original_message)
         self.date = date
         self.original_message = original_message
         self.uploaded = uploaded
 
-        super().__init__(title, "", description, Image(image_url), Author(author), '5570309', None, None)
+        super().__init__(title, "", description, Image(image_url), Author(author), 5570309, None, None)
 
     @classmethod
     def from_dict(cls, json):
