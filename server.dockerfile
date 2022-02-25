@@ -8,7 +8,7 @@ RUN apt update && apt install -y gcc
 #RUN tar zxvf /tmp/wsgi.tar.gz -C /tmp/
 #RUN make -C /tmp/uwsgi-2.0
 
-RUN pip install --upgrade uwsgi gunicorn requests bs4 flask
+RUN pip install --upgrade uwsgi gunicorn requests bs4 flask lxml
 
 COPY ./server.py ./server.py
 COPY ./wsgi.py ./wsgi.py
