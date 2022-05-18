@@ -21,6 +21,7 @@ intents.emojis = True
 intents.messages = True
 intents.reactions = True
 intents.presences = True
+intents.message_content = True
 bot = commands.Bot(command_prefix="$", description=description, intents=intents)
 bot.remove_command('help')
 

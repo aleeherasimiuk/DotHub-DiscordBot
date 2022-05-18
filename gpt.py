@@ -12,7 +12,7 @@ intents.emojis = True
 intents.messages = True
 intents.reactions = True
 intents.presences = True
-
+intents.message_content = True
 logger = setup_logger("logs/gpt.log")
 
 bot = commands.Bot(command_prefix='=', intents=intents)
@@ -86,7 +86,7 @@ async def generate(ctx, payload):
             async with session.post("http://api.vicgalle.net:5000/generate", params=payload) as response:
                 json_response = await response.json()            
     except Exception as e:
-        await ctx.respond(f"```Parece que hubo un error al comunicarme con la API de GPT-j 🤒.\nNo te preocupes. En breves estáre disponible de nuevo.```")
+        await ctx.send_followup(f"```Parece que hubo un error al comunicarme con la API de GPT-j 🤒.\nNo te preocupes. En breves estáre disponible de nuevo.```")
 
     return json_response['text'].strip()
 
@@ -110,6 +110,5 @@ def update_db(ctx, prompt, response, db):
             "prompt": prompt,
             "response": response
         })
-
-
+    
 bot.run(os.environ['TOKEN'])

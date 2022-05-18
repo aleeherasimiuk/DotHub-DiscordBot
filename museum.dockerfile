@@ -1,4 +1,4 @@
-FROM swaxtech/pycord2:v1
+FROM swaxtech/pycord2:v2
 
 WORKDIR /usr/src/app
 

@@ -17,7 +17,17 @@ message_content = ""
 last_message = ""
 spam_counter = 0
 
-bot = commands.Bot(command_prefix='>')
+description = 'N/A'
+intents = discord.Intents.default()
+intents.members = True
+intents.guilds = True
+intents.emojis = True
+intents.messages = True
+intents.reactions = True
+intents.presences = True
+intents.message_content = True
+bot = commands.Bot(command_prefix = ">", description = description, intents = intents)
+bot.remove_command('help')
 
 @bot.event
 async def on_message(message):

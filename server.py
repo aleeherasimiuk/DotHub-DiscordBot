@@ -41,7 +41,7 @@ def receive_youtube_notification():
 @app.route('/youtube_video', methods=['GET'])
 def challenge():
     challenge = request.args.get('hub.challenge')
-    #logger.info("Challenge for youtube subscription received: {}".format(challenge))
+    logger.info("Challenge for youtube subscription received")
 
     if challenge:
         return challenge
@@ -62,7 +62,7 @@ def receive_twitch_notification():
 
     if 'challenge' in _json.keys():
         challenge = _json['challenge']
-        logger.info("Challenge for youtube subscription received: {}".format(challenge))
+        logger.info("Challenge for youtube subscription received")
         return challenge
 
     try:
