@@ -15,6 +15,7 @@ with open(CONFIG_FILE) as file:
 
 message_content = ""
 last_message = ""
+last_message_content = ""
 spam_counter = 0
 
 description = 'N/A'
@@ -31,17 +32,18 @@ bot.remove_command('help')
 
 @bot.event
 async def on_message(message):
-    global message_content, last_message, spam_counter
+    global last_message, last_message_content, spam_counter
     message_content = f"{message.author.id}: {message.content}"
     message_content = message_content.replace("'", "<c>")
-    if message_content == last_message and message.content != "":
+    if message_content == last_message_content and message.content != "":
         spam_counter += 1
         await message.delete()
         logger.warning(f"User Spam: {message_content}")
     else:
-        last_message = message_content
+        last_message_content = message_content
         spam_counter = 0
     if spam_counter > 2:
+        await last_message.delete()
         user = message.author
         muted = discord.utils.get(user.guild.roles, name="muted")
         verified = discord.utils.get(user.guild.roles, name="Member")
